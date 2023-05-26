@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "habit-tracker-light",
-    "slug": "habit-tracker-light",
+    "name": "habitwarden-android-dark",
+    "slug": "habitwarden-android-dark",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -22,11 +22,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.vvasile.habitwarden_android_dark"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8f8c18e2-9b0b-4f50-885c-c7497baac711"
+      }
     }
   }
 }
