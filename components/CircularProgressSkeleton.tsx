@@ -1,46 +1,27 @@
 import {StyleSheet, Text, View} from "react-native";
 import React, {ReactNode} from "react";
+import {CircularProgressBase} from "react-native-circular-progress-indicator";
+import {CIRCLE_RADIUS, HABIT_INACTIVE_CIRCLE_COLOR, INACTIVE_STROKE_COLOR, STROKE_WIDTH} from "./HabitSummary";
 
 interface CircularProgressSkeletonProps {
     logo: ReactNode,
-    CIRCLE_RADIUS: number,
-    CIRCLE_COLOR: string,
-    STROKE_WIDTH: number,
-    STROKE_COLOR: string,
 }
 
 export default function CircularProgressSkeleton(props: CircularProgressSkeletonProps) {
     const logo = props.logo;
-    const CIRCLE_RADIUS = props.CIRCLE_RADIUS;
-    const STROKE_WIDTH = props.STROKE_WIDTH - 2; // somehow needs to be 2px less
-    const STROKE_COLOR = props.STROKE_COLOR;
-    const CIRCLE_COLOR = props.CIRCLE_COLOR;
-
-    const INNER_CIRCLE_RADIUS = CIRCLE_RADIUS - STROKE_WIDTH;
-
-    const styles = StyleSheet.create({
-        stroke: {
-            display: "flex",
-            width: 2 * CIRCLE_RADIUS,
-            height: 2 * CIRCLE_RADIUS,
-            backgroundColor: STROKE_COLOR,
-            borderRadius: CIRCLE_RADIUS,
-        },
-        circle: {
-            display: "flex",
-            position: "absolute",
-            width: 2 * INNER_CIRCLE_RADIUS,
-            height: 2 * INNER_CIRCLE_RADIUS,
-            backgroundColor: CIRCLE_COLOR,
-            borderRadius: INNER_CIRCLE_RADIUS,
-        }
-    });
 
     return (
         <View style={{display: "flex", gap: 20, alignItems: 'center', justifyContent: 'center'}}>
-            <View style={styles.stroke}/>
-            <View style={styles.circle}/>
-            {props.logo}
+            <CircularProgressBase
+                value={0}
+                activeStrokeWidth={STROKE_WIDTH}
+                inActiveStrokeWidth={STROKE_WIDTH}
+                inActiveStrokeColor={INACTIVE_STROKE_COLOR}
+                circleBackgroundColor={HABIT_INACTIVE_CIRCLE_COLOR}
+                radius={CIRCLE_RADIUS}
+                maxValue={1}
+            />
+            {logo}
             <Text style={{
                 position: "absolute",
                 top: 140,
