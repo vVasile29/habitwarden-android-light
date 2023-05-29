@@ -7,7 +7,7 @@ import {
     HABIT_INACTIVE_CIRCLE_COLOR,
     INACTIVE_STROKE_COLOR,
     STROKE_WIDTH
-} from "./HabitSummary";
+} from "./Constants";
 
 interface HabitButtonProps {
     done: number,
@@ -30,7 +30,7 @@ export default function HabitButton(props: HabitButtonProps) {
                 inActiveStrokeWidth={STROKE_WIDTH}
                 inActiveStrokeColor={INACTIVE_STROKE_COLOR}
                 activeStrokeColor={getColorByPercentage(done / toDo)}
-                circleBackgroundColor={isActive ? HABIT_READY_CIRCLE_COLOR : HABIT_INACTIVE_CIRCLE_COLOR}
+                circleBackgroundColor={done / toDo === 1 ? "#98FB98" : isActive ? HABIT_READY_CIRCLE_COLOR : HABIT_INACTIVE_CIRCLE_COLOR}
                 radius={CIRCLE_RADIUS}
                 maxValue={toDo}
             />

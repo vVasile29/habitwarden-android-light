@@ -15,6 +15,7 @@ const SQUATS = "squats";
 const MEDITATION = "meditation";
 
 export default function Habits() {
+    const [userId, setUserId] = useState('');
     const [username, setUsername] = useState('');
     const [waterLoading, setWaterLoading] = useState(false);
     const [squatsLoading, setSquatsLoading] = useState(false);
@@ -25,19 +26,26 @@ export default function Habits() {
     // TODO find better option?
     const allSiblingsLoaded = !waterLoading && !squatsLoading && !meditationLoading;
 
-    const whoAmI = async () => {
-        try {
-            const result = await axios.get(API + '/user/currentUser');
-            setUsername(result.data.name);
-        } catch (e) {
-            return {error: true, message: (e as any).response.data.message}
-        }
-    }
+    // probably infinite loop because state rerender triggered on every one
+    // const whoAmI = async () => {
+    //     try {
+    //         const result = await axios.get(API + '/user/currentUser');
+    //         // console.log(result.data);
+    //         setUsername(result.data.name);
+    //         setUserId(result.data.id);
+    //     } catch (e) {
+    //         return {error: true, message: (e as any).response.data.message}
+    //     }
+    // }
 
-    whoAmI();
+    console.log("my habits rendered!")
+
+    // whoAmI();
 
     return (
         <View style={styles.container}>
+            <Text style={styles.textLeft}>Abbruchrate{"\n"}aller{"\n"}Nutzer</Text>
+            <Text style={styles.textRight}>Deine{"\n"}Streak</Text>
             {/* TODO Logos are just hardcoded into place in their own component, make it flexible*/}
             <HabitSummary
                 id={WATER}
@@ -62,11 +70,28 @@ export default function Habits() {
     );
 }
 
+const textStyle = {
+    position: "absolute",
+    top: 10,
+    fontSize: 20,
+    fontWeight: "bold"
+};
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    // @ts-ignore
+    textLeft: {
+        ...textStyle,
+        left: 18,
+    },
+    // @ts-ignore
+    textRight: {
+        ...textStyle,
+        right: 18,
     },
 });

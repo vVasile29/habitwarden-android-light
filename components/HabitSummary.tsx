@@ -1,11 +1,10 @@
 import React, {ReactNode, useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
 import axios from "axios";
 import {API} from "../app/context/AuthContext";
-import {Circle} from "react-native-svg";
 import CircularProgressSkeleton from "./CircularProgressSkeleton";
 import HabitButton from "./HabitButton";
+import {useRouter} from "expo-router";
 
 interface Habit {
     _id: string;
@@ -16,6 +15,13 @@ interface Habit {
     timesPerDay: number;
     fakeUserCancellationRate: number;
     notificationText: NotificationText;
+}
+
+export interface DateData {
+    userId: string;
+    habitId: string,
+    date: string;
+    lieOnDone: boolean,
 }
 
 interface NotificationText {
@@ -29,23 +35,18 @@ interface HabitSummaryProps {
     allSiblingsLoaded: boolean,
 }
 
-export const CIRCLE_RADIUS: number = 95;
-export const STROKE_WIDTH: number = 15;
-export const INACTIVE_STROKE_COLOR: string = '#708090';
-export const HABIT_INACTIVE_CIRCLE_COLOR: string = '#DCDCDC';
-export const HABIT_READY_CIRCLE_COLOR: string = '#87CEEB';
-
 const HabitSummary = (props: HabitSummaryProps) => {
     const logo = props.logo;
     const setLoading = props.onLoading;
     const allSiblingsLoaded = props.allSiblingsLoaded;
 
     const [habit, setHabit] = useState<Habit | null>(null);
-    const [done, setDone] = useState(2);
+    const [done, setDone] = useState(3);
     const [toDo, setToDo] = useState(0);
     const [fakeUserCancellationRate, setFakeUserCancellationRate] = useState(0);
     const [streak, setStreak] = useState(0);
     const [habitReady, setHabitReady] = useState(false);
+    const router = useRouter();
 
     const getHabit = async (): Promise<Habit> => {
         try {
@@ -62,7 +63,6 @@ const HabitSummary = (props: HabitSummaryProps) => {
                 setLoading(true)
                 const habit: Habit = await getHabit();
                 setHabit(habit);
-                // Set other state values based on habit properties
                 setToDo(habit.timesPerDay);
                 setFakeUserCancellationRate(habit.fakeUserCancellationRate);
                 setLoading(false)
@@ -76,20 +76,76 @@ const HabitSummary = (props: HabitSummaryProps) => {
 
     if (!allSiblingsLoaded) {
         return (
-            <CircularProgressSkeleton
-                logo={logo}
-            />
+            <View
+                style={styles.summary}>
+                <Text style={styles.rate}>-</Text>
+                <View style={styles.habitButton}>
+                    <CircularProgressSkeleton
+                        logo={logo}
+                    />
+                </View>
+                <View style={styles.streak}>
+                    {streak !== 0 && <Text style={styles.streakFlame}>🔥</Text>}
+                    <Text style={styles.streakText}>-</Text>
+                </View>
+            </View>
         );
     }
 
     return (
-        <HabitButton
-            done={done}
-            toDo={toDo}
-            isActive={habitReady}
-            logo={logo}
-        />
+        <Pressable
+            style={styles.summary}
+            onPress={() => router.replace(`/${props.id}`)}
+        >
+            <Text style={styles.rate}>{fakeUserCancellationRate * 100}%</Text>
+            <View style={styles.habitButton}>
+                <HabitButton
+                    done={done}
+                    toDo={toDo}
+                    isActive={habitReady}
+                    logo={logo}
+                />
+            </View>
+            <View style={styles.streak}>
+                {streak !== 0 && <Text style={styles.streakFlame}>🔥</Text>}
+                <Text style={styles.streakText}>{streak}</Text>
+            </View>
+        </Pressable>
     );
 
 }
+
+const styles = StyleSheet.create({
+    summary: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 30
+    },
+    rate: {
+        flex: 1,
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "limegreen",
+    },
+    habitButton: {
+        flex: 6,
+        alignItems: "center"
+    },
+    streak: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    streakFlame: {
+        fontSize: 38,
+        bottom: 6,
+        right: 2
+    },
+    streakText: {
+        position: "absolute",
+        fontSize: 30
+    }
+})
 export default HabitSummary;

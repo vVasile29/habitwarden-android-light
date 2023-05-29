@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from "react-native";
 import React, {ReactNode} from "react";
 import {CircularProgressBase} from "react-native-circular-progress-indicator";
-import {CIRCLE_RADIUS, HABIT_INACTIVE_CIRCLE_COLOR, INACTIVE_STROKE_COLOR, STROKE_WIDTH} from "./HabitSummary";
+import {CIRCLE_RADIUS, HABIT_INACTIVE_CIRCLE_COLOR, INACTIVE_STROKE_COLOR, STROKE_WIDTH} from "./Constants";
 
 interface CircularProgressSkeletonProps {
     logo: ReactNode,
