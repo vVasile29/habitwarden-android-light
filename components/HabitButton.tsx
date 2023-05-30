@@ -1,4 +1,4 @@
-import {Text, View} from "react-native";
+import {Pressable, Text, View} from "react-native";
 import {CircularProgressBase} from "react-native-circular-progress-indicator";
 import React, {ReactNode} from "react";
 import {
@@ -8,22 +8,31 @@ import {
     INACTIVE_STROKE_COLOR,
     STROKE_WIDTH
 } from "./Constants";
+import {useRouter} from "expo-router";
 
 interface HabitButtonProps {
-    done: number,
-    toDo: number,
-    isActive: boolean,
-    logo: ReactNode,
+    habitName: string;
+    done: number;
+    toDo: number;
+    isActive: boolean;
+    logo: ReactNode;
 }
 
 export default function HabitButton(props: HabitButtonProps) {
     const done = props.done;
     const toDo = props.toDo;
-    const isActive = props.isActive;
+    const isActive = !props.isActive;
     const logo = props.logo;
+    const router = useRouter();
+
+    console.log("habit button " + props.habitName + " rendered with done:" + done + "and todo: " + toDo)
 
     return (
-        <View style={{display: "flex", gap: 20, alignItems: 'center', justifyContent: 'center'}}>
+        <Pressable
+            style={{display: "flex", gap: 20, alignItems: 'center', justifyContent: 'center'}}
+            onPress={() => router.replace(`/${props.habitName}`)}
+            disabled={done / toDo === 1 || !isActive}
+        >
             <CircularProgressBase
                 value={done + 0.00001}
                 activeStrokeWidth={STROKE_WIDTH}
@@ -41,7 +50,7 @@ export default function HabitButton(props: HabitButtonProps) {
                 fontSize: 28,
                 fontWeight: "bold"
             }}>{done + "/" + toDo}</Text>
-        </View>
+        </Pressable>
     );
 }
 

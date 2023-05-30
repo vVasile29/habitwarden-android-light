@@ -3,18 +3,15 @@ import axios from "axios";
 import {API, USER_KEY} from "../context/AuthContext";
 import React, {useState} from "react";
 import moment from 'moment';
-import {DateData} from "../../components/HabitSummary";
 import {useRouter} from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import {WATER} from "../(tabs)/habits";
 
 export default function Water() {
-    // TODO hardcoded, change this
     const [userName, setUserName] = useState("")
-    const habitName = "water";
+    const habitName = WATER;
     const [lieOnDone, setLieOnDone] = useState(false);
-
     const router = useRouter();
-    console.log("meditation rendered")
 
     const sendDateData = async (userName: string, habitName: string, date: string, lieOnDone: boolean) => {
         try {
@@ -22,7 +19,7 @@ export default function Water() {
             if (userName) {
                 setUserName(userName);
             }
-            const result = await axios.post<DateData>(`${API}/dateData/saveDateData`, {
+            await axios.post(`${API}/dateData/saveDateData`, {
                 userName,
                 habitName,
                 date,
@@ -35,23 +32,26 @@ export default function Water() {
 
     const handlePress = () => {
         const currentDate = moment().locale('de').format('YYYY-MM-DD'); // Get current date and time in German format
-        console.log(currentDate)
         sendDateData(userName!, habitName, currentDate, lieOnDone);
-        console.log('pressed!');
     };
 
     return (
         <View>
-            <View>
-                <Button
-                    title={'Water done'}
-                    onPress={handlePress}
-                />
-                <Button
-                    title={'Zurück zu Habits'}
-                    onPress={() => router.replace("/habits")}
-                />
-            </View>
+            <Button
+                title={habitName + 'done'}
+                onPress={() => {
+                    handlePress();
+                    router.replace("/habits");
+                }}
+            />
+            <Button
+                title={'I lied'}
+                onPress={() => setLieOnDone(true)}
+            />
+            <Button
+                title={'Zurück zu Habits'}
+                onPress={() => router.replace("/habits")}
+            />
         </View>
     );
 }

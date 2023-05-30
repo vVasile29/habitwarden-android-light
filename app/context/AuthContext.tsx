@@ -99,7 +99,7 @@ export const AuthProvider = ({children}: any) => {
             await SecureStore.setItemAsync(TOKEN_KEY, JSON.stringify(tokenResult.data.data));
 
             const userResult = await axios.get(API + '/user/currentUser');
-            await SecureStore.setItemAsync(USER_KEY, JSON.stringify(userResult.data.name))
+            await SecureStore.setItemAsync(USER_KEY, userResult.data.name)
 
             if(tokenResult.data.data !== null) {
                 setAuthState({

@@ -1,13 +1,15 @@
-import React, {ReactNode, useEffect, useState} from 'react';
+import React, {ReactNode, useEffect, useMemo, useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import axios from "axios";
-import {API} from "../app/context/AuthContext";
+import {API, USER_KEY} from "../app/context/AuthContext";
 import CircularProgressSkeleton from "./CircularProgressSkeleton";
 import HabitButton from "./HabitButton";
 import {useRouter} from "expo-router";
+import {shouldThrowAnErrorOutsideOfExpo} from "expo/build/environment/validatorState";
+import * as SecureStore from "expo-secure-store";
+import moment, {locale} from "moment/moment";
 
 interface Habit {
-    _id: string;
     name: string;
     pointsPerTask: number;
     pointsPerDay: number;
@@ -17,11 +19,9 @@ interface Habit {
     notificationText: NotificationText;
 }
 
-export interface DateData {
-    userId: string;
-    habitId: string,
-    date: string;
-    lieOnDone: boolean,
+interface HabitDoneData {
+    habitName: string;
+    lieOnDone: boolean[];
 }
 
 interface NotificationText {
@@ -29,7 +29,7 @@ interface NotificationText {
 }
 
 interface HabitSummaryProps {
-    id: string,
+    habitName: string,
     logo: ReactNode,
     onLoading: React.Dispatch<React.SetStateAction<boolean>>,
     allSiblingsLoaded: boolean,
@@ -40,38 +40,59 @@ const HabitSummary = (props: HabitSummaryProps) => {
     const setLoading = props.onLoading;
     const allSiblingsLoaded = props.allSiblingsLoaded;
 
+    const [userName, setUserName] = useState<string | null>("");
     const [habit, setHabit] = useState<Habit | null>(null);
-    const [done, setDone] = useState(3);
+    const [done, setDone] = useState(0);
     const [toDo, setToDo] = useState(0);
     const [fakeUserCancellationRate, setFakeUserCancellationRate] = useState(0);
     const [streak, setStreak] = useState(0);
     const [habitReady, setHabitReady] = useState(false);
-    const router = useRouter();
 
-    const getHabit = async (): Promise<Habit> => {
+    // TODO find out how to make this better and split into multiple methods, just doesn't work otherwise currently
+    const fetchAllData = async () => {
         try {
-            const response = await axios.get<Habit>(`${API}/habits/getHabit/${props.id}`);
-            return response.data;
-        } catch (e: any) {
-            throw e;
+            // fetch username
+            const userName = await SecureStore.getItemAsync(USER_KEY);
+            setUserName(userName);
+
+            // fetch habit
+            const habitResponse = await axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`);
+            const habit = habitResponse.data;
+            setHabit(habit);
+            setToDo(habit.timesPerDay);
+            setFakeUserCancellationRate(habit.fakeUserCancellationRate);
+
+            // fetch habitDoneData
+            const habitDoneDataResponse = await axios.post<HabitDoneData>(
+                `${API}/dateData/getHabitDoneData`,
+                {
+                    userName: userName,
+                    habitName: habit?.name,
+                    date: moment().locale('de').format('YYYY-MM-DD')
+                }
+            );
+            const habitDoneData = habitDoneDataResponse.data;
+            setDone( habitDoneData ? habitDoneData.lieOnDone.length : 0);
+
+            // fetch streak
+            const streakResponse = await axios.post(
+                `${API}/dateData/getStreak`,
+                {
+                    userName: userName,
+                    habitName: habit?.name,
+                    date: moment().locale('de').format('YYYY-MM-DD')
+                }
+            );
+            const streak = streakResponse.data;
+            setStreak(streak)
+            setLoading(false);
+        } catch (e) {
+            console.log(e);
         }
-    }
+    };
 
     useEffect(() => {
-        const fetchHabit = async () => {
-            try {
-                setLoading(true)
-                const habit: Habit = await getHabit();
-                setHabit(habit);
-                setToDo(habit.timesPerDay);
-                setFakeUserCancellationRate(habit.fakeUserCancellationRate);
-                setLoading(false)
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchHabit();
+        fetchAllData()
     }, []);
 
     if (!allSiblingsLoaded) {
@@ -93,13 +114,11 @@ const HabitSummary = (props: HabitSummaryProps) => {
     }
 
     return (
-        <Pressable
-            style={styles.summary}
-            onPress={() => router.replace(`/${props.id}`)}
-        >
+        <View style={styles.summary}>
             <Text style={styles.rate}>{fakeUserCancellationRate * 100}%</Text>
             <View style={styles.habitButton}>
                 <HabitButton
+                    habitName={props.habitName}
                     done={done}
                     toDo={toDo}
                     isActive={habitReady}
@@ -110,7 +129,7 @@ const HabitSummary = (props: HabitSummaryProps) => {
                 {streak !== 0 && <Text style={styles.streakFlame}>🔥</Text>}
                 <Text style={styles.streakText}>{streak}</Text>
             </View>
-        </Pressable>
+        </View>
     );
 
 }
@@ -145,7 +164,8 @@ const styles = StyleSheet.create({
     },
     streakText: {
         position: "absolute",
-        fontSize: 30
+        fontSize: 30,
+        fontWeight: "bold"
     }
 })
 export default HabitSummary;
