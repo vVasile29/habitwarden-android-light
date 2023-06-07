@@ -1,24 +1,42 @@
 import {Button, Pressable, Text, View} from "react-native";
 import axios from "axios";
 import {API, USER_KEY} from "../context/AuthContext";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import moment from 'moment';
+import 'moment/locale/de';
 import {useRouter} from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import {SQUATS} from "../(tabs)/habits";
+import {Habit} from "../../components/HabitSummary";
 
 export default function Squats() {
     const [userName, setUserName] = useState("")
+    const [pointsPerTask, setPointsPerTask] = useState(0);
     const habitName = SQUATS;
     const [lieOnDone, setLieOnDone] = useState(false);
     const router = useRouter();
 
-    const sendDateData = async (userName: string, habitName: string, date: string, lieOnDone: boolean) => {
+    const fetchData = async () => {
         try {
+            // fetch username
             const userName = await SecureStore.getItemAsync(USER_KEY);
-            if (userName) {
-                setUserName(userName);
-            }
+            setUserName(userName!);
+
+            // fetch habit
+            const habitResponse = await axios.get<Habit>(`${API}/habits/getHabit/${habitName}`);
+            const habit = habitResponse.data;
+            setPointsPerTask(habit.pointsPerTask);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const saveData = async (userName: string, habitName: string, date: string, lieOnDone: boolean) => {
+        try {
+            // save user points
+            await axios.post(`${API}/user/savePoints/${pointsPerTask}`);
+
+            // save date data
             await axios.post(`${API}/dateData/saveDateData`, {
                 userName,
                 habitName,
@@ -30,10 +48,15 @@ export default function Squats() {
         }
     };
 
+    useEffect(() => {
+        fetchData();
+    })
+
     const handlePress = () => {
         const currentDate = moment().locale('de').format('YYYY-MM-DD'); // Get current date and time in German format
-        sendDateData(userName!, habitName, currentDate, lieOnDone);
+        saveData(userName!, habitName, currentDate, lieOnDone);
     };
+
 
     return (
         <View>

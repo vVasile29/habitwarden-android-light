@@ -23,7 +23,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.vvasile.habitwarden_android_dark"
+      "package": "com.vvasile.habitwarden_android_dark",
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true
     },
     "web": {
       "bundler": "metro",

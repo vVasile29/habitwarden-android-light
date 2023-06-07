@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "723028448474",
+    "project_id": "habitwarden-android-dark",
+    "storage_bucket": "habitwarden-android-dark.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723028448474:android:4965d87d4cd4088da341e3",
+        "android_client_info": {
+          "package_name": "com.vvasile.habitwarden_android_dark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723028448474-8pv26su5gpnq2i1p7pflaghsench0tml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChS1Sw4AI6yRnqerU8-3aYV-KTSVUMrqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723028448474-8pv26su5gpnq2i1p7pflaghsench0tml.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

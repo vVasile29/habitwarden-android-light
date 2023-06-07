@@ -16,21 +16,24 @@ interface HabitButtonProps {
     toDo: number;
     isActive: boolean;
     logo: ReactNode;
+    setIsButtonClickable: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default function HabitButton(props: HabitButtonProps) {
     const done = props.done;
     const toDo = props.toDo;
-    const isActive = !props.isActive;
+    const isActive = props.isActive;
     const logo = props.logo;
+    const setIsButtonClickable = props.setIsButtonClickable;
     const router = useRouter();
-
-    console.log("habit button " + props.habitName + " rendered with done:" + done + "and todo: " + toDo)
 
     return (
         <Pressable
             style={{display: "flex", gap: 20, alignItems: 'center', justifyContent: 'center'}}
-            onPress={() => router.replace(`/${props.habitName}`)}
+            onPress={() => {
+                setIsButtonClickable(false);
+                router.replace(`/${props.habitName}`)
+            }}
             disabled={done / toDo === 1 || !isActive}
         >
             <CircularProgressBase

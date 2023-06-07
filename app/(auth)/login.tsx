@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
 import {useAuth} from "../context/AuthContext";
 import {Redirect, useRouter} from "expo-router";
-import { ObjectId } from 'bson';
+import {registerForPushNotificationsAsync, triggerNotifications} from "../notificationHooks";
 
 const LoginForm = () => {
     const {onLogin, authState} = useAuth();
@@ -12,9 +12,11 @@ const LoginForm = () => {
 
     const login = async () => {
         const result = await onLogin!(name, password);
-        console.log(result)
         if (result instanceof Error) {
             alert("invalid credentials")
+        } else {
+            await registerForPushNotificationsAsync();
+            await triggerNotifications();
         }
     }
 

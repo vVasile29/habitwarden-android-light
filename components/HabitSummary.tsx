@@ -4,28 +4,27 @@ import axios from "axios";
 import {API, USER_KEY} from "../app/context/AuthContext";
 import CircularProgressSkeleton from "./CircularProgressSkeleton";
 import HabitButton from "./HabitButton";
-import {useRouter} from "expo-router";
-import {shouldThrowAnErrorOutsideOfExpo} from "expo/build/environment/validatorState";
 import * as SecureStore from "expo-secure-store";
-import moment, {locale} from "moment/moment";
+import moment from "moment/moment";
+import 'moment/locale/de';
 
-interface Habit {
+export interface Habit {
     name: string;
     pointsPerTask: number;
     pointsPerDay: number;
     amountPerTask: number;
     timesPerDay: number;
     fakeUserCancellationRate: number;
-    notificationText: NotificationText;
 }
 
 interface HabitDoneData {
-    habitName: string;
-    lieOnDone: boolean[];
+    doneDate: string;
+    habitDoneDataInfo: HabitDoneDataInfo[];
 }
 
-interface NotificationText {
-    // Define the structure of the notification text fields here
+interface HabitDoneDataInfo {
+    doneTime: string;
+    lieOnDone: boolean;
 }
 
 interface HabitSummaryProps {
@@ -33,12 +32,23 @@ interface HabitSummaryProps {
     logo: ReactNode,
     onLoading: React.Dispatch<React.SetStateAction<boolean>>,
     allSiblingsLoaded: boolean,
+    schedule: { startTime: string, endTime: string }[]
 }
+
+const getCurrentTime = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    return `${hours}:${minutes}`;
+};
 
 const HabitSummary = (props: HabitSummaryProps) => {
     const logo = props.logo;
     const setLoading = props.onLoading;
     const allSiblingsLoaded = props.allSiblingsLoaded;
+    const habitName = props.habitName;
+    const schedule = props.schedule;
 
     const [userName, setUserName] = useState<string | null>("");
     const [habit, setHabit] = useState<Habit | null>(null);
@@ -46,10 +56,11 @@ const HabitSummary = (props: HabitSummaryProps) => {
     const [toDo, setToDo] = useState(0);
     const [fakeUserCancellationRate, setFakeUserCancellationRate] = useState(0);
     const [streak, setStreak] = useState(0);
-    const [habitReady, setHabitReady] = useState(false);
+    const [isButtonClickable, setIsButtonClickable] = useState(false);
 
     // TODO find out how to make this better and split into multiple methods, just doesn't work otherwise currently
     const fetchAllData = async () => {
+
         try {
             // fetch username
             const userName = await SecureStore.getItemAsync(USER_KEY);
@@ -62,29 +73,90 @@ const HabitSummary = (props: HabitSummaryProps) => {
             setToDo(habit.timesPerDay);
             setFakeUserCancellationRate(habit.fakeUserCancellationRate);
 
-            // fetch habitDoneData
+            // fetch habitDoneData of this user and now()
             const habitDoneDataResponse = await axios.post<HabitDoneData>(
-                `${API}/dateData/getHabitDoneData`,
+                `${API}/dateData/getCurrentHabitDoneDataOfUser`,
                 {
                     userName: userName,
-                    habitName: habit?.name,
+                    habitName: habitName,
                     date: moment().locale('de').format('YYYY-MM-DD')
                 }
             );
             const habitDoneData = habitDoneDataResponse.data;
-            setDone( habitDoneData ? habitDoneData.lieOnDone.length : 0);
+            // TODO this sometimes still logs the value before and therefore renders it, problem!
+            setDone(habitDoneData.habitDoneDataInfo ? habitDoneData.habitDoneDataInfo.length : 0);
 
             // fetch streak
             const streakResponse = await axios.post(
                 `${API}/dateData/getStreak`,
                 {
                     userName: userName,
-                    habitName: habit?.name,
+                    habitName: habitName,
                     date: moment().locale('de').format('YYYY-MM-DD')
                 }
             );
             const streak = streakResponse.data;
             setStreak(streak)
+
+            // check if we are in a schedule, if not obviously button is not clickable
+            const currentTime = getCurrentTime();
+            const currentSchedule = schedule.find(schedule => schedule.startTime <= currentTime && currentTime <= schedule.endTime);
+
+            if (!currentSchedule) {
+                setIsButtonClickable(false);
+                setLoading(false);
+            }
+
+            const latestHabitDoneDataResponse = await axios.post<HabitDoneData>(
+                `${API}/dateData/getLastHabitDoneDataOfUser`,
+                {
+                    userName: userName,
+                    habitName: habitName,
+                }
+            );
+            const latestHabitDoneData = latestHabitDoneDataResponse.data;
+
+            if (!latestHabitDoneData) {
+                setIsButtonClickable(true);
+                setLoading(false);
+                return;
+            }
+
+            const habitDoneDataInfo = latestHabitDoneData.habitDoneDataInfo.at(-1);
+
+            // check if last done time even exists, if not obviously the button is clickable
+            if (!habitDoneDataInfo) {
+                setIsButtonClickable(true);
+                setLoading(false);
+                return;
+            }
+
+            // check if doneTime from lastDoneTime day is today, if not return true
+            const lastDoneTimeDate = new Date(habitDoneDataInfo.doneTime);
+
+            // Get the current date
+            const currentDate = new Date();
+
+            // Set both dates to the same date (ignoring time)
+            lastDoneTimeDate.setHours(0, 0, 0, 0);
+            currentDate.setHours(0, 0, 0, 0);
+            if (lastDoneTimeDate.getTime() !== currentDate.getTime()) {
+                setIsButtonClickable(true);
+                setLoading(false);
+                return;
+            }
+
+            // otherwise check if lastDoneTime hour and minute is in schedule, if so, return false, otherwise return true
+            const lastDoneTimeDate2 = new Date(habitDoneDataInfo.doneTime);
+            const lastDoneTime = lastDoneTimeDate2.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false});
+            if (lastDoneTime >= currentSchedule?.startTime! && lastDoneTime <= currentSchedule?.endTime!) {
+                setIsButtonClickable(false);
+                setLoading(false);
+                return;
+            }
+
+            setIsButtonClickable(true);
+            // set loading to false if nothing applied
             setLoading(false);
         } catch (e) {
             console.log(e);
@@ -92,7 +164,7 @@ const HabitSummary = (props: HabitSummaryProps) => {
     };
 
     useEffect(() => {
-        fetchAllData()
+        fetchAllData();
     }, []);
 
     if (!allSiblingsLoaded) {
@@ -121,8 +193,9 @@ const HabitSummary = (props: HabitSummaryProps) => {
                     habitName={props.habitName}
                     done={done}
                     toDo={toDo}
-                    isActive={habitReady}
+                    isActive={isButtonClickable}
                     logo={logo}
+                    setIsButtonClickable={setIsButtonClickable}
                 />
             </View>
             <View style={styles.streak}>

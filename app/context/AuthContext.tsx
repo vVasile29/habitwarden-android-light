@@ -7,7 +7,7 @@ import {ObjectId} from "bson";
 
 interface AuthProps {
     authState?: { token: string | null; isAuthenticated: boolean | null }
-    onRegister?: (name: string, password: string, age: string, gender: string, profession: string) => Promise<any>;
+    onRegister?: (name: string, password: string, age: string, gender: string, profession: string, isDarkGroup: boolean) => Promise<any>;
     onLogin?: (name: string, password: string) => Promise<any>;
     onLogout?: () => Promise<any>;
     onTest?: () => Promise<any>;
@@ -15,7 +15,7 @@ interface AuthProps {
 
 export const TOKEN_KEY = 'jwt';
 export const USER_KEY = 'userId';
-export const API = 'http://192.168.2.140:8080';
+export const API = 'http://192.168.2.145:8080';
 export const AUTH_API = API + '/auth';
 const AuthContext = createContext<AuthProps>({})
 
@@ -79,12 +79,12 @@ export const AuthProvider = ({children}: any) => {
 
     useProtectedRoute(authState.isAuthenticated)
 
-    const register = async (name: string, password: string, age: string, gender: string, profession: string) => {
+    const register = async (name: string, password: string, age: string, gender: string, profession: string, isDarkGroup: boolean) => {
         try {
             await SecureStore.deleteItemAsync(TOKEN_KEY);
             await SecureStore.deleteItemAsync(USER_KEY);
             axios.defaults.headers.common['Authorization'] = ``;
-            return await axios.post(`${AUTH_API}/register`, {name, password, age, gender, profession});
+            return await axios.post(`${AUTH_API}/register`, {name, password, age, gender, profession, isDarkGroup});
         } catch (e) {
             return e
         }
