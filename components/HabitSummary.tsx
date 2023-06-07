@@ -59,107 +59,140 @@ const HabitSummary = (props: HabitSummaryProps) => {
     const [isButtonClickable, setIsButtonClickable] = useState(false);
 
     // TODO find out how to make this better and split into multiple methods, just doesn't work otherwise currently
-    const fetchAllData = async () => {
+    // const fetchAllData = async () => {
+    //
+    //     try {
+    //         const userName = await SecureStore.getItemAsync(USER_KEY);
+    //         setUserName(userName);
+    //
+    //         const habitResponse = await axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`);
+    //         const habit = habitResponse.data;
+    //         setHabit(habit);
+    //         setToDo(habit.timesPerDay);
+    //         setFakeUserCancellationRate(habit.fakeUserCancellationRate);
+    //
+    //         const currentDate = moment().locale('de').format('YYYY-MM-DD');
+    //
+    //         const [habitDoneDataResponse, latestHabitDoneDataResponse, streakResponse] = await Promise.all([
+    //             axios.post<HabitDoneData>(`${API}/dateData/getCurrentHabitDoneDataOfUser`, {
+    //                 userName: userName,
+    //                 habitName: habitName,
+    //                 date: currentDate
+    //             }),
+    //             axios.post<HabitDoneData>(`${API}/dateData/getLastHabitDoneDataOfUser`, {
+    //                 userName: userName,
+    //                 habitName: habitName
+    //             }),
+    //             axios.post(`${API}/dateData/getStreak`, {
+    //                 userName: userName,
+    //                 habitName: habitName,
+    //                 date: currentDate
+    //             })
+    //         ]);
+    //
+    //         const habitDoneData = habitDoneDataResponse.data;
+    //         setDone(habitDoneData?.habitDoneDataInfo?.length || 0);
+    //
+    //         const streak = streakResponse.data;
+    //         setStreak(streak);
+    //
+    //         const latestHabitDoneData = latestHabitDoneDataResponse.data;
+    //
+    //         if (!latestHabitDoneData || !latestHabitDoneData.habitDoneDataInfo) {
+    //             setIsButtonClickable(true);
+    //             setLoading(false);
+    //             return;
+    //         }
+    //
+    //         const lastDoneTime = moment(latestHabitDoneData?.habitDoneDataInfo?.at(-1)?.doneTime);
+    //         const currentTime = moment();
+    //         const currentSchedule = schedule.find((schedule: { startTime: string; endTime: string }) => {
+    //             const startTime = moment(schedule.startTime, 'HH:mm');
+    //             const endTime = moment(schedule.endTime, 'HH:mm');
+    //             return startTime.isSameOrBefore(currentTime) && endTime.isSameOrAfter(currentTime);
+    //         });
+    //
+    //         if (!currentSchedule || !lastDoneTime.isSame(currentTime, 'day')) {
+    //             setIsButtonClickable(false);
+    //             setLoading(false);
+    //             return;
+    //         }
+    //
+    //         const lastDoneTimeFormatted = lastDoneTime.format('HH:mm');
+    //         if (lastDoneTimeFormatted >= currentSchedule.startTime && lastDoneTimeFormatted <= currentSchedule.endTime) {
+    //             setIsButtonClickable(false);
+    //         } else {
+    //             setIsButtonClickable(true);
+    //         }
+    //
+    //         setLoading(false);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    //
+    // };
 
+    const fetchAllData = async () => {
         try {
-            // fetch username
             const userName = await SecureStore.getItemAsync(USER_KEY);
             setUserName(userName);
 
-            // fetch habit
-            const habitResponse = await axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`);
+            const [habitResponse, habitDoneDataResponse, latestHabitDoneDataResponse, streakResponse] = await Promise.all([
+                axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`),
+                axios.post<HabitDoneData>(`${API}/dateData/getCurrentHabitDoneDataOfUser`, {
+                    userName: userName,
+                    habitName: habitName,
+                    date: moment().locale('de').format('YYYY-MM-DD')
+                }),
+                axios.post<HabitDoneData>(`${API}/dateData/getLastHabitDoneDataOfUser`, {
+                    userName: userName,
+                    habitName: habitName
+                }),
+                axios.post(`${API}/dateData/getStreak`, {
+                    userName: userName,
+                    habitName: habitName,
+                    date: moment().locale('de').format('YYYY-MM-DD')
+                })
+            ]);
+
             const habit = habitResponse.data;
             setHabit(habit);
             setToDo(habit.timesPerDay);
             setFakeUserCancellationRate(habit.fakeUserCancellationRate);
 
-            // fetch habitDoneData of this user and now()
-            const habitDoneDataResponse = await axios.post<HabitDoneData>(
-                `${API}/dateData/getCurrentHabitDoneDataOfUser`,
-                {
-                    userName: userName,
-                    habitName: habitName,
-                    date: moment().locale('de').format('YYYY-MM-DD')
-                }
-            );
             const habitDoneData = habitDoneDataResponse.data;
-            // TODO this sometimes still logs the value before and therefore renders it, problem!
-            setDone(habitDoneData.habitDoneDataInfo ? habitDoneData.habitDoneDataInfo.length : 0);
+            setDone(habitDoneData?.habitDoneDataInfo?.length || 0);
 
-            // fetch streak
-            const streakResponse = await axios.post(
-                `${API}/dateData/getStreak`,
-                {
-                    userName: userName,
-                    habitName: habitName,
-                    date: moment().locale('de').format('YYYY-MM-DD')
-                }
-            );
             const streak = streakResponse.data;
-            setStreak(streak)
+            setStreak(streak);
 
-            // check if we are in a schedule, if not obviously button is not clickable
-            const currentTime = getCurrentTime();
-            const currentSchedule = schedule.find(schedule => schedule.startTime <= currentTime && currentTime <= schedule.endTime);
-
-            if (!currentSchedule) {
-                setIsButtonClickable(false);
-                setLoading(false);
-            }
-
-            const latestHabitDoneDataResponse = await axios.post<HabitDoneData>(
-                `${API}/dateData/getLastHabitDoneDataOfUser`,
-                {
-                    userName: userName,
-                    habitName: habitName,
-                }
-            );
             const latestHabitDoneData = latestHabitDoneDataResponse.data;
 
-            if (!latestHabitDoneData) {
+            if (!latestHabitDoneData || !latestHabitDoneData.habitDoneDataInfo) {
                 setIsButtonClickable(true);
                 setLoading(false);
                 return;
             }
 
-            const habitDoneDataInfo = latestHabitDoneData.habitDoneDataInfo.at(-1);
+            const lastDoneTime = moment(latestHabitDoneData?.habitDoneDataInfo?.at(-1)?.doneTime);
+            const currentTime = moment();
 
-            // check if last done time even exists, if not obviously the button is clickable
-            if (!habitDoneDataInfo) {
-                setIsButtonClickable(true);
-                setLoading(false);
-                return;
-            }
+            const inCurrentSchedule = schedule.find((schedule: { startTime: string; endTime: string }) => {
+                const startTime = moment(schedule.startTime, 'HH:mm');
+                const endTime = moment(schedule.endTime, 'HH:mm');
+                return startTime.isSameOrBefore(currentTime) && endTime.isSameOrAfter(currentTime);
+            })!!;
 
-            // check if doneTime from lastDoneTime day is today, if not return true
-            const lastDoneTimeDate = new Date(habitDoneDataInfo.doneTime);
+            setIsButtonClickable(
+                inCurrentSchedule &&
+                !lastDoneTime.isSame(currentTime, 'day') &&
+                lastDoneTime.format('HH:mm') > inCurrentSchedule.startTime &&
+                lastDoneTime.format('HH:mm') < inCurrentSchedule.endTime
+            );
 
-            // Get the current date
-            const currentDate = new Date();
-
-            // Set both dates to the same date (ignoring time)
-            lastDoneTimeDate.setHours(0, 0, 0, 0);
-            currentDate.setHours(0, 0, 0, 0);
-            if (lastDoneTimeDate.getTime() !== currentDate.getTime()) {
-                setIsButtonClickable(true);
-                setLoading(false);
-                return;
-            }
-
-            // otherwise check if lastDoneTime hour and minute is in schedule, if so, return false, otherwise return true
-            const lastDoneTimeDate2 = new Date(habitDoneDataInfo.doneTime);
-            const lastDoneTime = lastDoneTimeDate2.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', hour12: false});
-            if (lastDoneTime >= currentSchedule?.startTime! && lastDoneTime <= currentSchedule?.endTime!) {
-                setIsButtonClickable(false);
-                setLoading(false);
-                return;
-            }
-
-            setIsButtonClickable(true);
-            // set loading to false if nothing applied
             setLoading(false);
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -178,7 +211,6 @@ const HabitSummary = (props: HabitSummaryProps) => {
                     />
                 </View>
                 <View style={styles.streak}>
-                    {streak !== 0 && <Text style={styles.streakFlame}>🔥</Text>}
                     <Text style={styles.streakText}>-</Text>
                 </View>
             </View>
