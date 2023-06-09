@@ -1,5 +1,5 @@
 import React, {ReactNode, useEffect, useMemo, useState} from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Alert} from 'react-native';
 import axios from "axios";
 import {API, USER_KEY} from "../app/context/AuthContext";
 import CircularProgressSkeleton from "./CircularProgressSkeleton";
@@ -24,6 +24,7 @@ interface HabitDoneData {
 
 interface HabitDoneDataInfo {
     doneTime: string;
+    done: boolean;
     lieOnDone: boolean;
 }
 
@@ -35,14 +36,6 @@ interface HabitSummaryProps {
     schedule: { startTime: string, endTime: string }[]
 }
 
-const getCurrentTime = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-
-    return `${hours}:${minutes}`;
-};
-
 const HabitSummary = (props: HabitSummaryProps) => {
     const logo = props.logo;
     const setLoading = props.onLoading;
@@ -50,92 +43,19 @@ const HabitSummary = (props: HabitSummaryProps) => {
     const habitName = props.habitName;
     const schedule = props.schedule;
 
-    const [userName, setUserName] = useState<string | null>("");
-    const [habit, setHabit] = useState<Habit | null>(null);
-    const [done, setDone] = useState(0);
-    const [toDo, setToDo] = useState(0);
+    const [doneAmount, setDoneAmountAmount] = useState(0);
+    const [toDoAmount, setToDoAmount] = useState(0);
     const [fakeUserCancellationRate, setFakeUserCancellationRate] = useState(0);
     const [streak, setStreak] = useState(0);
     const [isButtonClickable, setIsButtonClickable] = useState(false);
 
-    // TODO find out how to make this better and split into multiple methods, just doesn't work otherwise currently
-    // const fetchAllData = async () => {
-    //
-    //     try {
-    //         const userName = await SecureStore.getItemAsync(USER_KEY);
-    //         setUserName(userName);
-    //
-    //         const habitResponse = await axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`);
-    //         const habit = habitResponse.data;
-    //         setHabit(habit);
-    //         setToDo(habit.timesPerDay);
-    //         setFakeUserCancellationRate(habit.fakeUserCancellationRate);
-    //
-    //         const currentDate = moment().locale('de').format('YYYY-MM-DD');
-    //
-    //         const [habitDoneDataResponse, latestHabitDoneDataResponse, streakResponse] = await Promise.all([
-    //             axios.post<HabitDoneData>(`${API}/dateData/getCurrentHabitDoneDataOfUser`, {
-    //                 userName: userName,
-    //                 habitName: habitName,
-    //                 date: currentDate
-    //             }),
-    //             axios.post<HabitDoneData>(`${API}/dateData/getLastHabitDoneDataOfUser`, {
-    //                 userName: userName,
-    //                 habitName: habitName
-    //             }),
-    //             axios.post(`${API}/dateData/getStreak`, {
-    //                 userName: userName,
-    //                 habitName: habitName,
-    //                 date: currentDate
-    //             })
-    //         ]);
-    //
-    //         const habitDoneData = habitDoneDataResponse.data;
-    //         setDone(habitDoneData?.habitDoneDataInfo?.length || 0);
-    //
-    //         const streak = streakResponse.data;
-    //         setStreak(streak);
-    //
-    //         const latestHabitDoneData = latestHabitDoneDataResponse.data;
-    //
-    //         if (!latestHabitDoneData || !latestHabitDoneData.habitDoneDataInfo) {
-    //             setIsButtonClickable(true);
-    //             setLoading(false);
-    //             return;
-    //         }
-    //
-    //         const lastDoneTime = moment(latestHabitDoneData?.habitDoneDataInfo?.at(-1)?.doneTime);
-    //         const currentTime = moment();
-    //         const currentSchedule = schedule.find((schedule: { startTime: string; endTime: string }) => {
-    //             const startTime = moment(schedule.startTime, 'HH:mm');
-    //             const endTime = moment(schedule.endTime, 'HH:mm');
-    //             return startTime.isSameOrBefore(currentTime) && endTime.isSameOrAfter(currentTime);
-    //         });
-    //
-    //         if (!currentSchedule || !lastDoneTime.isSame(currentTime, 'day')) {
-    //             setIsButtonClickable(false);
-    //             setLoading(false);
-    //             return;
-    //         }
-    //
-    //         const lastDoneTimeFormatted = lastDoneTime.format('HH:mm');
-    //         if (lastDoneTimeFormatted >= currentSchedule.startTime && lastDoneTimeFormatted <= currentSchedule.endTime) {
-    //             setIsButtonClickable(false);
-    //         } else {
-    //             setIsButtonClickable(true);
-    //         }
-    //
-    //         setLoading(false);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    //
-    // };
+    useEffect(() => {
+        fetchAllData();
+    }, []);
 
     const fetchAllData = async () => {
         try {
             const userName = await SecureStore.getItemAsync(USER_KEY);
-            setUserName(userName);
 
             const [habitResponse, habitDoneDataResponse, latestHabitDoneDataResponse, streakResponse] = await Promise.all([
                 axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`),
@@ -152,27 +72,21 @@ const HabitSummary = (props: HabitSummaryProps) => {
                     userName: userName,
                     habitName: habitName,
                     date: moment().locale('de').format('YYYY-MM-DD')
-                })
+                }),
             ]);
 
             const habit = habitResponse.data;
-            setHabit(habit);
-            setToDo(habit.timesPerDay);
+            setToDoAmount(habit.timesPerDay);
             setFakeUserCancellationRate(habit.fakeUserCancellationRate);
 
             const habitDoneData = habitDoneDataResponse.data;
-            setDone(habitDoneData?.habitDoneDataInfo?.length || 0);
+            const done = habitDoneData?.habitDoneDataInfo?.filter(habitDoneDataInfo => habitDoneDataInfo.done).length;
+            setDoneAmountAmount(done ?? 0);
 
             const streak = streakResponse.data;
             setStreak(streak);
 
             const latestHabitDoneData = latestHabitDoneDataResponse.data;
-
-            if (!latestHabitDoneData || !latestHabitDoneData.habitDoneDataInfo) {
-                setIsButtonClickable(true);
-                setLoading(false);
-                return;
-            }
 
             const lastDoneTime = moment(latestHabitDoneData?.habitDoneDataInfo?.at(-1)?.doneTime);
             const currentTime = moment();
@@ -181,13 +95,18 @@ const HabitSummary = (props: HabitSummaryProps) => {
                 const startTime = moment(schedule.startTime, 'HH:mm');
                 const endTime = moment(schedule.endTime, 'HH:mm');
                 return startTime.isSameOrBefore(currentTime) && endTime.isSameOrAfter(currentTime);
-            })!!;
+            });
+
+            if (inCurrentSchedule!! && (!latestHabitDoneData || !latestHabitDoneData.habitDoneDataInfo)) {
+                setIsButtonClickable(true);
+                setLoading(false);
+                return;
+            }
 
             setIsButtonClickable(
-                inCurrentSchedule &&
-                !lastDoneTime.isSame(currentTime, 'day') &&
-                lastDoneTime.format('HH:mm') > inCurrentSchedule.startTime &&
-                lastDoneTime.format('HH:mm') < inCurrentSchedule.endTime
+                inCurrentSchedule!! &&
+                lastDoneTime.isSame(currentTime, 'day') &&
+                lastDoneTime.format('HH:mm') < inCurrentSchedule.startTime
             );
 
             setLoading(false);
@@ -195,10 +114,6 @@ const HabitSummary = (props: HabitSummaryProps) => {
             console.log(error);
         }
     };
-
-    useEffect(() => {
-        fetchAllData();
-    }, []);
 
     if (!allSiblingsLoaded) {
         return (
@@ -223,9 +138,10 @@ const HabitSummary = (props: HabitSummaryProps) => {
             <View style={styles.habitButton}>
                 <HabitButton
                     habitName={props.habitName}
-                    done={done}
-                    toDo={toDo}
-                    isActive={isButtonClickable}
+                    doneAmount={doneAmount}
+                    toDoAmount={toDoAmount}
+                    // isActive={isButtonClickable}
+                    isActive={true} // das nur zum testen weil out of schedule nach mitternacht
                     logo={logo}
                     setIsButtonClickable={setIsButtonClickable}
                 />
@@ -251,7 +167,7 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 30,
         fontWeight: "bold",
-        color: "limegreen",
+        color: "#5c940d",
     },
     habitButton: {
         flex: 6,

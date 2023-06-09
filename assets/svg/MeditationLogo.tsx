@@ -1,8 +1,8 @@
-import React from "react";
+import React, {CSSProperties} from "react";
 import {SvgXml} from "react-native-svg";
 import {View} from "react-native";
 
-export default function MeditationLogo() {
+export default function MeditationLogo({position, top, width, height}: CSSProperties) {
     const svgMarkup = `<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 \t viewBox="0 0 496.2 496.2" xml:space="preserve">
 <polygon style="fill:#302F2F;" points="220.4,311.5 221.6,321.8 248.1,328.4 274.6,321.8 275.8,311.5 "/>
@@ -49,8 +49,9 @@ export default function MeditationLogo() {
 </g>
 </svg>`;
     const SvgImage = () => (
-        <View style={{position: "absolute", top: -20}}>
-            <SvgXml xml={svgMarkup} width="220px" height="220px"/>
+        // @ts-ignore
+        <View style={{position: position, top: top}}>
+            <SvgXml xml={svgMarkup} width={width} height={height}/>
         </View>
     );
 

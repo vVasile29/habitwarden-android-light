@@ -21,15 +21,17 @@ export default function TabLayout() {
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-                headerStyle: {backgroundColor: "orange"},
+                tabBarActiveTintColor: "white",
+                tabBarInactiveTintColor: "black",
+                headerStyle: {backgroundColor: "#fd7e14"},
             }}
         >
             <Tabs.Screen
                 name="habits"
                 options={{
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
-                    tabBarStyle: {backgroundColor: "orange"},
+                    tabBarActiveBackgroundColor: "#fd7e14",
+                    tabBarInactiveBackgroundColor: "#f59749",
                     headerRight: () => (
                         <Link href="/modal" asChild>
                             <Pressable>
@@ -50,14 +52,16 @@ export default function TabLayout() {
                 name="statistics"
                 options={{
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
-                    tabBarStyle: {backgroundColor: "orange"}
+                    tabBarActiveBackgroundColor: "#fd7e14",
+                    tabBarInactiveBackgroundColor: "#f59749",
                 }}
             />
             <Tabs.Screen
                 name="profile"
                 options={{
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
-                    tabBarStyle: {backgroundColor: "orange"}
+                    tabBarActiveBackgroundColor: "#fd7e14",
+                    tabBarInactiveBackgroundColor: "#f59749",
                 }}
             />
         </Tabs>

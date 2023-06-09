@@ -50,8 +50,6 @@ export default function Profile() {
         await onLogout!();
     }
 
-
-
     async function reloadNotifications(){
         await cancelAllNotificationsAndRemoveFirstLogin();
         await registerForPushNotificationsAsync();

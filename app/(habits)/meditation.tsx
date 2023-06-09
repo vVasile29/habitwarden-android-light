@@ -1,80 +1,75 @@
-import {Button, Pressable, Text, View} from "react-native";
-import axios from "axios";
-import {API, USER_KEY} from "../context/AuthContext";
-import React, {useEffect, useState} from "react";
+import {Button, View} from "react-native";
+import React, {useState} from "react";
 import moment from 'moment';
 import 'moment/locale/de';
 import {useRouter} from "expo-router";
-import * as SecureStore from 'expo-secure-store';
-import {MEDITATION} from "../(tabs)/habits";
+import {MEDITATION, useFetchPointsPerTask, useSaveData, WATER} from "../(tabs)/habits";
 import {Habit} from "../../components/HabitSummary";
+import HabitScreen from "../../components/habitScreen";
+import LiePopup from "../../components/Popups/LiePopup";
+import LosePointsWarningPopup from "../../components/Popups/LosePointsWarningPopup";
+import LosePointsPopup from "../../components/Popups/LosePointsPopup";
+import SquatsLogo from "../../assets/svg/SquatsLogo";
+import MeditationLogo from "../../assets/svg/MeditationLogo";
+import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
 
 export default function Meditation() {
-    const [userName, setUserName] = useState("")
-    const [pointsPerTask, setPointsPerTask] = useState(0);
-    const habitName = MEDITATION;
+    const [liePopupVisible, setLiePopupVisible] = useState(false);
+    const [losePointsWarningPopupVisible, setLosePointsWarningPopupVisible] = useState(false);
+    const [shameCheckbox, setShameCheckbox] = useState(false);
+    const [losePointsPopupVisible, setLosePointsPopupVisible] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true)
+    const [habit, setHabit] = useState<Habit>();
     const [lieOnDone, setLieOnDone] = useState(false);
     const router = useRouter();
 
-    const fetchData = async () => {
-        try {
-            // fetch username
-            const userName = await SecureStore.getItemAsync(USER_KEY);
-            setUserName(userName!);
+    const habitPromise = useFetchPointsPerTask(MEDITATION);
+    habitPromise.then(habit => setHabit(habit));
+    const saveData = useSaveData();
 
-            // fetch habit
-            const habitResponse = await axios.get<Habit>(`${API}/habits/getHabit/${habitName}`);
-            const habit = habitResponse.data;
-            setPointsPerTask(habit.pointsPerTask);
-        } catch (e) {
-            console.log(e);
-        }
-    };
+    async function handlePressDone() {
+        setIsPlaying(prev => !prev)
+        setLiePopupVisible(true);
+    }
 
-    const saveData = async (userName: string, habitName: string, date: string, lieOnDone: boolean) => {
-        try {
-            // save user points
-            await axios.post(`${API}/user/savePoints/${pointsPerTask}`);
+    async function handlePressYesOnDone() {
+        setLiePopupVisible(false)
+        const currentDate = moment().locale('de').format('YYYY-MM-DD');
+        await saveData(habit?.name!, currentDate, true, lieOnDone, habit?.pointsPerTask!);
+        router.replace("/habits");
+    }
 
-            // save date data
-            await axios.post(`${API}/dateData/saveDateData`, {
-                userName,
-                habitName,
-                date,
-                lieOnDone
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    })
-
-    const handlePress = () => {
-        const currentDate = moment().locale('de').format('YYYY-MM-DD'); // Get current date and time in German format
-        saveData(userName!, habitName, currentDate, lieOnDone);
-    };
+    async function handlePressNotDone() {
+        const currentDate = moment().locale('de').format('YYYY-MM-DD');
+        await saveData(MEDITATION, currentDate, false, lieOnDone, habit?.pointsPerTask!);
+        router.replace("/habits");
+    }
 
     return (
-        <View>
-            <Button
-                title={habitName + 'done'}
-                onPress={() => {
-                    handlePress();
-                    router.replace("/habits");
-                }}
-            />
-            <Button
-                title={'I lied'}
-                onPress={() => setLieOnDone(true)}
-            />
-            <Button
-                title={'Zurück zu Habits'}
-                onPress={() => router.replace("/habits")}
-            />
-        </View>
+        <HabitScreenWithPopups
+            isPlaying={isPlaying}
+            duration={60}
+            setLiePopupVisible={setLiePopupVisible}
+            taskDescription={"Bitte meditiere für " + habit?.amountPerTask! + " Minute!"}
+            logo={<MeditationLogo position={"relative"} width={280} height={280}/>}
+            liePopupVisible={liePopupVisible}
+            handlePressYesOnDone={handlePressYesOnDone}
+            setLieOnDone={setLieOnDone}
+            losePointsWarningPopupVisible={losePointsWarningPopupVisible}
+            handlePressDone={handlePressDone}
+            fakeUserCancellationDescription={
+                "Wer hat denn bitte etwas gegen Entspannung?\n" +
+                "Wieso würdest du jetzt aufgeben wollen, \n" +
+                "hier geben im Durchschnitt nur " + habit?.fakeUserCancellationRate! * 100 + "% auf?"
+            }
+            shameCheckbox={shameCheckbox}
+            setShameCheckbox={setShameCheckbox}
+            setLosePointsWarningPopupVisible={setLosePointsWarningPopupVisible}
+            setLosePointsPopupVisible={setLosePointsPopupVisible}
+            setIsPlaying={setIsPlaying}
+            losePointsPopupVisible={losePointsPopupVisible}
+            pointsPerTask={habit?.pointsPerTask!}
+            handlePressNotDone={handlePressNotDone}
+        />
     );
 }
-

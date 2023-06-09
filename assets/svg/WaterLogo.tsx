@@ -1,8 +1,8 @@
-import React from "react";
+import React, {CSSProperties} from "react";
 import {SvgXml} from "react-native-svg";
 import {View} from "react-native";
 
-export default function WaterLogo() {
+export default function WaterLogo({position, top, width, height}: CSSProperties) {
     const svgMarkup = `
         <svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="glass-water-2" data-name="Flat Line"
              xmlns="http://www.w3.org/2000/svg" class="icon flat-line">
@@ -16,8 +16,9 @@ export default function WaterLogo() {
                   style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path>
         </svg>`;
     const SvgImage = () => (
-        <View style={{ position: "absolute", top: 40 }}>
-            <SvgXml xml={svgMarkup} width="100px" height="100px" />
+        // @ts-ignore
+        <View style={{ position: position, top: top }}>
+            <SvgXml xml={svgMarkup} width={width} height={height} />
         </View>
     );
 

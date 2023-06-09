@@ -12,16 +12,16 @@ import {useRouter} from "expo-router";
 
 interface HabitButtonProps {
     habitName: string;
-    done: number;
-    toDo: number;
+    doneAmount: number;
+    toDoAmount: number;
     isActive: boolean;
     logo: ReactNode;
     setIsButtonClickable: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default function HabitButton(props: HabitButtonProps) {
-    const done = props.done;
-    const toDo = props.toDo;
+    const doneAmount = props.doneAmount;
+    const toDoAmount = props.toDoAmount;
     const isActive = props.isActive;
     const logo = props.logo;
     const setIsButtonClickable = props.setIsButtonClickable;
@@ -34,17 +34,17 @@ export default function HabitButton(props: HabitButtonProps) {
                 setIsButtonClickable(false);
                 router.replace(`/${props.habitName}`)
             }}
-            disabled={done / toDo === 1 || !isActive}
+            disabled={doneAmount / toDoAmount === 1 || !isActive}
         >
             <CircularProgressBase
-                value={done + 0.00001}
+                value={doneAmount + 0.00001}
                 activeStrokeWidth={STROKE_WIDTH}
                 inActiveStrokeWidth={STROKE_WIDTH}
                 inActiveStrokeColor={INACTIVE_STROKE_COLOR}
-                activeStrokeColor={getColorByPercentage(done / toDo)}
-                circleBackgroundColor={done / toDo === 1 ? "#98FB98" : isActive ? HABIT_READY_CIRCLE_COLOR : HABIT_INACTIVE_CIRCLE_COLOR}
+                activeStrokeColor={getColorByPercentage(doneAmount / toDoAmount)}
+                circleBackgroundColor={doneAmount / toDoAmount === 1 ? "#98FB98" : isActive ? HABIT_READY_CIRCLE_COLOR : HABIT_INACTIVE_CIRCLE_COLOR}
                 radius={CIRCLE_RADIUS}
-                maxValue={toDo}
+                maxValue={toDoAmount}
             />
             {logo}
             <Text style={{
@@ -52,7 +52,7 @@ export default function HabitButton(props: HabitButtonProps) {
                 top: 140,
                 fontSize: 28,
                 fontWeight: "bold"
-            }}>{done + "/" + toDo}</Text>
+            }}>{doneAmount + "/" + toDoAmount}</Text>
         </Pressable>
     );
 }

@@ -1,8 +1,8 @@
-import React from "react";
+import React, {CSSProperties} from "react";
 import {SvgXml} from "react-native-svg";
 import {View} from "react-native";
 
-export default function SquatsLogo() {
+export default function SquatsLogo({position, top, left, width, height}: CSSProperties) {
     const svgMarkup = `<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 \t viewBox="0 0 496.2 496.2" xml:space="preserve">
 <path style="fill:#3D3C3C;" d="M200.2,253.8c-13.3,4-21.6,10.9-25.7,18.4c-2.5,4.6-3.4,14.4-2.8,18.9c1.6,12.7,10.5,17.6,10.5,17.6
@@ -51,8 +51,9 @@ export default function SquatsLogo() {
 \ts4,1,6.6,0.6c4.5-0.7,8.1-1.9,11.7-4C334.6,182.9,341.3,181.6,341.1,179.7z"/>
 </svg>`;
     const SvgImage = () => (
-        <View style={{position: "absolute", top: -10, left: 10}}>
-            <SvgXml xml={svgMarkup} width="190px" height="190px"/>
+        // @ts-ignore
+        <View style={{position: position, top: top, left: left}}>
+            <SvgXml xml={svgMarkup} width={width} height={height}/>
         </View>
     );
 
