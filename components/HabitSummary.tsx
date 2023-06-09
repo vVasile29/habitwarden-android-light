@@ -7,6 +7,7 @@ import HabitButton from "./HabitButton";
 import * as SecureStore from "expo-secure-store";
 import moment from "moment/moment";
 import 'moment/locale/de';
+import {heightDP} from "../constants/DpScaling";
 
 export interface Habit {
     name: string;
@@ -140,8 +141,8 @@ const HabitSummary = (props: HabitSummaryProps) => {
                     habitName={props.habitName}
                     doneAmount={doneAmount}
                     toDoAmount={toDoAmount}
-                    // isActive={isButtonClickable}
-                    isActive={true} // das nur zum testen weil out of schedule nach mitternacht
+                    isActive={isButtonClickable}
+                    // isActive={true} // das nur zum testen weil out of schedule nach mitternacht
                     logo={logo}
                     setIsButtonClickable={setIsButtonClickable}
                 />
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     },
     rate: {
         flex: 1,
-        fontSize: 30,
+        fontSize: heightDP("3.5%"),
         fontWeight: "bold",
         color: "#5c940d",
     },
@@ -179,13 +180,13 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     streakFlame: {
-        fontSize: 38,
-        bottom: 6,
-        right: 2
+        fontSize: heightDP("5%"),
+        right: heightDP("0.3%"),
+        bottom: heightDP("1%")
     },
     streakText: {
         position: "absolute",
-        fontSize: 30,
+        fontSize: heightDP("3.5%"),
         fontWeight: "bold"
     }
 })

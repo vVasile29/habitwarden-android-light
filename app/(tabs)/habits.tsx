@@ -9,6 +9,7 @@ import MeditationLogo from "../../assets/svg/MeditationLogo";
 import {API, USER_KEY} from "../context/AuthContext";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { heightDP } from '../../constants/DpScaling';
 
 export const WATER = "water";
 export const SQUATS = "squats";
@@ -67,7 +68,6 @@ export function useSaveData() {
 
             if (done) {
                 await axios.post(`${API}/user/savePoints/${pointsPerTask}`)
-                console.log("ich habe punkte bekommen!")
                 Alert.alert(pointsPerTask + " Punkte bekommen!")
             } else {
                 await axios.post(`${API}/user/removePoints/${pointsPerTask}`)
@@ -91,21 +91,21 @@ export default function Habits() {
             <Text style={styles.textRight}>Deine{"\n"}Streak</Text>
             <HabitSummary
                 habitName={WATER}
-                logo={<WaterLogo position={"absolute"} top={40} width={100} height={100}/>}
+                logo={<WaterLogo position={"absolute"} top={heightDP("4.3%")} width={heightDP("12%")} height={heightDP("12%")}/>}
                 onLoading={setWaterLoading}
                 allSiblingsLoaded={allSiblingsLoaded}
                 schedule={waterSchedule}
             />
             <HabitSummary
                 habitName={SQUATS}
-                logo={<SquatsLogo position={"absolute"} top={-10} left={10} width={190} height={190}/>}
+                logo={<SquatsLogo position={"absolute"} top={heightDP("-0.3%")} left={heightDP("2.7%")} width={heightDP("21%")} height={heightDP("21%")}/>}
                 onLoading={setSquatsLoading}
                 allSiblingsLoaded={allSiblingsLoaded}
                 schedule={squatsSchedule}
             />
             <HabitSummary
                 habitName={MEDITATION}
-                logo={<MeditationLogo position={"absolute"} top={-20} width={220} height={220}/>}
+                logo={<MeditationLogo position={"absolute"} top={heightDP("-2.3%")} width={heightDP("25%")} height={heightDP("25%")}/>}
                 onLoading={setMeditationLoading}
                 allSiblingsLoaded={allSiblingsLoaded}
                 schedule={meditationSchedule}
@@ -116,8 +116,8 @@ export default function Habits() {
 
 const textStyle = {
     position: "absolute",
-    top: 10,
-    fontSize: 20,
+    top: heightDP("1.5%"),
+    fontSize: heightDP("2.65%"),
     fontWeight: "bold"
 };
 

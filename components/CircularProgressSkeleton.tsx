@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from "react-native";
 import React, {ReactNode} from "react";
 import {CircularProgressBase} from "react-native-circular-progress-indicator";
 import {CIRCLE_RADIUS, HABIT_INACTIVE_CIRCLE_COLOR, INACTIVE_STROKE_COLOR, STROKE_WIDTH} from "./Constants";
+import {heightDP} from "../constants/DpScaling";
 
 interface CircularProgressSkeletonProps {
     logo: ReactNode,
@@ -11,7 +12,7 @@ export default function CircularProgressSkeleton(props: CircularProgressSkeleton
     const logo = props.logo;
 
     return (
-        <View style={{display: "flex", gap: 20, alignItems: 'center', justifyContent: 'center'}}>
+        <View style={{display: "flex", gap: heightDP("2%"), alignItems: 'center', justifyContent: 'center'}}>
             <CircularProgressBase
                 value={0}
                 activeStrokeWidth={STROKE_WIDTH}
@@ -24,8 +25,8 @@ export default function CircularProgressSkeleton(props: CircularProgressSkeleton
             {logo}
             <Text style={{
                 position: "absolute",
-                top: 140,
-                fontSize: 28,
+                top: heightDP("17%"),
+                fontSize: heightDP("3.5%"),
                 fontWeight: "bold"
             }}>{" / "}</Text>
         </View>

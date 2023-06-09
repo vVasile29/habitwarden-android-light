@@ -1,8 +1,7 @@
 import {CountdownCircleTimer} from "react-native-countdown-circle-timer";
 import {Pressable, Text, View} from "react-native";
-import WaterLogo from "../assets/svg/WaterLogo";
 import React from "react";
-import {useRouter} from "expo-router";
+import {heightDP, widthDP} from "../constants/DpScaling";
 
 interface HabitScreenProps {
     isPlaying: boolean;
@@ -16,10 +15,14 @@ interface HabitScreenProps {
 }
 
 export default function HabitScreen(props: HabitScreenProps) {
-    const router = useRouter();
-
     return (
-        <View style={{display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 30, gap: 10}}>
+        <View style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingTop: heightDP("2.5%"),
+            gap: heightDP("1%")
+        }}>
             <CountdownCircleTimer
                 isPlaying={props.isPlaying}
                 duration={props.duration}
@@ -27,23 +30,24 @@ export default function HabitScreen(props: HabitScreenProps) {
                 colorsTime={[10, 6, 3, 0]}
                 onComplete={() => props.setLiePopupVisible(true)}
                 updateInterval={0}
+                size={heightDP("25%")}
             >
                 {({remainingTime, color}) => (
-                    <Text style={{color, fontSize: 40}}>
+                    <Text style={{color, fontSize: heightDP("5%")}}>
                         {remainingTime}
                     </Text>
                 )}
             </CountdownCircleTimer>
             {props.logo}
-            <Text style={{fontSize: 30, fontWeight: "bold", marginTop: "5%", marginBottom: "5%"}}>
+            <Text style={{fontSize: widthDP("7%"), fontWeight: "bold", marginBottom: heightDP("2%")}}>
                 {props.taskDescription}
             </Text>
             <Pressable
                 style={{
                     alignItems: 'center',
                     backgroundColor: '#82c91e',
-                    padding: 10,
-                    width: "30%",
+                    padding: heightDP("1%"),
+                    width: widthDP("30%"),
                     borderColor: "black",
                     borderWidth: 3,
                     borderRadius: 15,
@@ -52,14 +56,14 @@ export default function HabitScreen(props: HabitScreenProps) {
                     props.handlePressDone();
                 }}
             >
-                <Text style={{fontSize: 20, fontWeight: "bold"}}>Fertig</Text>
+                <Text style={{fontSize: heightDP("2.5%"), fontWeight: "bold"}}>Fertig</Text>
             </Pressable>
+            {/*<Pressable*/}
+            {/*    onPress={() => router.replace("/habits")}>*/}
+            {/*    <Text>Zurück zu Habits</Text>*/}
+            {/*</Pressable>*/}
             <Pressable
-                onPress={() => router.replace("/habits")}>
-                <Text>Zurück zu Habits</Text>
-            </Pressable>
-            <Pressable
-                style={{top: 50}}
+                style={{top: heightDP("3%")}}
                 onPress={() => {
                     props.setIsPlaying(false);
                     props.setLosePointsWarningPopupVisible(true);

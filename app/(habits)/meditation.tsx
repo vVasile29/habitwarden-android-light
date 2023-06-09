@@ -5,13 +5,9 @@ import 'moment/locale/de';
 import {useRouter} from "expo-router";
 import {MEDITATION, useFetchPointsPerTask, useSaveData, WATER} from "../(tabs)/habits";
 import {Habit} from "../../components/HabitSummary";
-import HabitScreen from "../../components/habitScreen";
-import LiePopup from "../../components/Popups/LiePopup";
-import LosePointsWarningPopup from "../../components/Popups/LosePointsWarningPopup";
-import LosePointsPopup from "../../components/Popups/LosePointsPopup";
-import SquatsLogo from "../../assets/svg/SquatsLogo";
 import MeditationLogo from "../../assets/svg/MeditationLogo";
 import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
+import {heightDP, widthDP} from "../../constants/DpScaling";
 
 export default function Meditation() {
     const [liePopupVisible, setLiePopupVisible] = useState(false);
@@ -51,7 +47,7 @@ export default function Meditation() {
             duration={60}
             setLiePopupVisible={setLiePopupVisible}
             taskDescription={"Bitte meditiere für " + habit?.amountPerTask! + " Minute!"}
-            logo={<MeditationLogo position={"relative"} width={280} height={280}/>}
+            logo={<MeditationLogo position={"relative"} width={widthDP("100%")} height={heightDP("33%")}/>}
             liePopupVisible={liePopupVisible}
             handlePressYesOnDone={handlePressYesOnDone}
             setLieOnDone={setLieOnDone}

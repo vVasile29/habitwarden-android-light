@@ -1,4 +1,4 @@
-import {Pressable, Text, View} from "react-native";
+import {Pressable, StyleSheet, Text, View} from "react-native";
 import ModalPopup from "../ModalPopup";
 import React from "react";
 
@@ -21,29 +21,13 @@ export default function LiePopup(props: LiePopupProps) {
             <Text style={{fontSize: 100, textAlign: "center", marginBottom: 15}}>🤔</Text>
             <View style={{display: "flex", flexDirection: "row", justifyContent: "center", gap: 10}}>
                 <Pressable
-                    style={{
-                        alignItems: 'center',
-                        backgroundColor: '#82c91e',
-                        padding: 10,
-                        width: "30%",
-                        borderColor: "black",
-                        borderWidth: 3,
-                        borderRadius: 15,
-                    }}
+                    style={[styles.pressable, {backgroundColor: '#82c91e'}]}
                     onPress={props.handlePressYesOnDone}
                 >
                     <Text style={{fontSize: 20, fontWeight: "bold"}}>Ja</Text>
                 </Pressable>
                 <Pressable
-                    style={{
-                        alignItems: 'center',
-                        backgroundColor: 'red',
-                        padding: 10,
-                        width: "30%",
-                        borderColor: "black",
-                        borderWidth: 3,
-                        borderRadius: 15,
-                    }}
+                    style={styles.pressable}
                     onPress={() => {
                         props.setLieOnDone(true);
                         props.setLiePopupVisible(false);
@@ -56,3 +40,15 @@ export default function LiePopup(props: LiePopupProps) {
         </ModalPopup>
     );
 }
+
+const styles = StyleSheet.create({
+    pressable: {
+        alignItems: 'center',
+        backgroundColor: 'red',
+        padding: 10,
+        width: "30%",
+        borderColor: "black",
+        borderWidth: 3,
+        borderRadius: 15,
+    },
+});

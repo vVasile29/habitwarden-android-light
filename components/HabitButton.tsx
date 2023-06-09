@@ -1,4 +1,4 @@
-import {Pressable, Text, View} from "react-native";
+import {Dimensions, Pressable, Text, View} from "react-native";
 import {CircularProgressBase} from "react-native-circular-progress-indicator";
 import React, {ReactNode} from "react";
 import {
@@ -9,6 +9,7 @@ import {
     STROKE_WIDTH
 } from "./Constants";
 import {useRouter} from "expo-router";
+import {heightDP} from "../constants/DpScaling";
 
 interface HabitButtonProps {
     habitName: string;
@@ -27,9 +28,10 @@ export default function HabitButton(props: HabitButtonProps) {
     const setIsButtonClickable = props.setIsButtonClickable;
     const router = useRouter();
 
+
     return (
         <Pressable
-            style={{display: "flex", gap: 20, alignItems: 'center', justifyContent: 'center'}}
+            style={{display: "flex", gap: heightDP("2%"), alignItems: 'center', justifyContent: 'center'}}
             onPress={() => {
                 setIsButtonClickable(false);
                 router.replace(`/${props.habitName}`)
@@ -42,15 +44,18 @@ export default function HabitButton(props: HabitButtonProps) {
                 inActiveStrokeWidth={STROKE_WIDTH}
                 inActiveStrokeColor={INACTIVE_STROKE_COLOR}
                 activeStrokeColor={getColorByPercentage(doneAmount / toDoAmount)}
-                circleBackgroundColor={doneAmount / toDoAmount === 1 ? "#98FB98" : isActive ? HABIT_READY_CIRCLE_COLOR : HABIT_INACTIVE_CIRCLE_COLOR}
+                circleBackgroundColor={
+                    doneAmount / toDoAmount === 1 ? "#98FB98" :
+                        isActive ? HABIT_READY_CIRCLE_COLOR : HABIT_INACTIVE_CIRCLE_COLOR
+                }
                 radius={CIRCLE_RADIUS}
                 maxValue={toDoAmount}
             />
             {logo}
             <Text style={{
                 position: "absolute",
-                top: 140,
-                fontSize: 28,
+                top: heightDP("17%"),
+                fontSize: heightDP("3.5%"),
                 fontWeight: "bold"
             }}>{doneAmount + "/" + toDoAmount}</Text>
         </Pressable>

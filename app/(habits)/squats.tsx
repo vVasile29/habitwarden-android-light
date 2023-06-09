@@ -12,6 +12,7 @@ import LosePointsPopup from "../../components/Popups/LosePointsPopup";
 import SquatsLogo from "../../assets/svg/SquatsLogo";
 import WaterLogo from "../../assets/svg/WaterLogo";
 import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
+import {heightDP, widthDP} from "../../constants/DpScaling";
 
 export default function Squats() {
     const [liePopupVisible, setLiePopupVisible] = useState(false);
@@ -51,7 +52,7 @@ export default function Squats() {
             duration={60}
             setLiePopupVisible={setLiePopupVisible}
             taskDescription={"Bitte mache " + habit?.amountPerTask! + " Kniebeugen!"}
-            logo={<SquatsLogo position={"relative"} left={10} width={280} height={280}/>}
+            logo={<SquatsLogo position={"relative"} left={10} width={widthDP("100%")} height={heightDP("33%")}/>}
             liePopupVisible={liePopupVisible}
             handlePressYesOnDone={handlePressYesOnDone}
             setLieOnDone={setLieOnDone}

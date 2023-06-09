@@ -17,6 +17,7 @@ import LiePopup from "../../components/Popups/LiePopup";
 import LosePointsWarningPopup from "../../components/Popups/LosePointsWarningPopup";
 import LosePointsPopup from "../../components/Popups/LosePointsPopup";
 import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
+import {heightDP} from "../../constants/DpScaling";
 
 export default function Water() {
     const [liePopupVisible, setLiePopupVisible] = useState(false);
@@ -56,7 +57,7 @@ export default function Water() {
             duration={35}
             setLiePopupVisible={setLiePopupVisible}
             taskDescription={"Bitte trinke " + habit?.amountPerTask! + "ml Wasser!"}
-            logo={<WaterLogo position={"relative"} width={280} height={280}/>}
+            logo={<WaterLogo position={"relative"} width={heightDP("33%")} height={heightDP("33%")}/>}
             liePopupVisible={liePopupVisible}
             handlePressYesOnDone={handlePressYesOnDone}
             setLieOnDone={setLieOnDone}
