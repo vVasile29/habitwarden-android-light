@@ -72,8 +72,7 @@ export default function Profile() {
             <Text style={styles.title}>Hallo, {userName}!</Text>
             <View>
                 <Text style={styles.points}>Punktzahl: {points}</Text>
-                <Text style={styles.shameText}>Na, das geht aber besser! Sei nicht so faul und halt' dich
-                    ran!</Text>
+                <Text style={styles.shameText}>Weiter so, du bist auf einem guten Weg!</Text>
             </View>
             <View style={styles.infoContainer}>
                 <View style={styles.infoText}>
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
     },
     points: {
         fontSize: heightDP("4.5%"),
-        color: "red",
+        color: "#82c91e",
         fontWeight: "bold",
         marginBottom: 2,
     },

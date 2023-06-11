@@ -16,7 +16,7 @@ const RegisterForm = () => {
     const router = useRouter();
 
     const register = async () => {
-        const result = await onRegister!(name, password, age, gender, profession, codeword, true);
+        const result = await onRegister!(name, password, age, gender, profession, codeword, false);
         if (result instanceof Error) {
             alert("User already exists")
         } else {

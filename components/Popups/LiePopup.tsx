@@ -8,7 +8,7 @@ interface LiePopupProps {
     handlePressYesOnDone: () => Promise<void>;
     setLieOnDone: React.Dispatch<React.SetStateAction<boolean>>;
     setLiePopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
-    setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+    setCancelPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function LiePopup(props: LiePopupProps) {
@@ -31,7 +31,7 @@ export default function LiePopup(props: LiePopupProps) {
                     onPress={() => {
                         props.setLieOnDone(true);
                         props.setLiePopupVisible(false);
-                        props.setIsPlaying(true);
+                        props.setCancelPopupVisible(true)
                     }}
                 >
                     <Text style={{fontSize: 20, fontWeight: "bold"}}>Nein</Text>

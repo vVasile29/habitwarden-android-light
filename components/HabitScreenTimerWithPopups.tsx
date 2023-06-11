@@ -1,13 +1,16 @@
+import HabitScreenWithTimer from "./habitScreenWithTimer";
+import LiePopup from "./Popups/LiePopup";
 import CancelPopup from "./Popups/CancelPopup";
 import React from "react";
 import ShowPointsPopup from "./Popups/ShowPointsPopup";
-import HabitScreen from "./HabitScreen";
-import LiePopup from "./Popups/LiePopup";
 
-interface HabitScreenWithPopupProps {
+interface HabitScreenTimerWithPopupProps {
+    isPlaying: boolean;
+    duration: number;
     setLiePopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
     taskDescription: string;
     handlePressDone: () => Promise<void>;
+    setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
     logo: any;
     liePopupVisible: boolean;
     handlePressYesOnDone: () => Promise<void>;
@@ -21,13 +24,16 @@ interface HabitScreenWithPopupProps {
     setCancelPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function HabitScreenWithPopups(props: HabitScreenWithPopupProps) {
+export default function HabitScreenTimerWithPopups(props: HabitScreenTimerWithPopupProps) {
     return (
         <>
-            <HabitScreen
+            <HabitScreenWithTimer
+                isPlaying={props.isPlaying}
+                duration={props.duration}
                 setLiePopupVisible={props.setLiePopupVisible}
                 taskDescription={props.taskDescription}
                 handlePressDone={props.handlePressDone}
+                setIsPlaying={props.setIsPlaying}
                 setWantedToQuit={props.setWantedToQuit}
                 logo={props.logo}
                 setCancelPopupVisible={props.setCancelPopupVisible}
@@ -41,8 +47,9 @@ export default function HabitScreenWithPopups(props: HabitScreenWithPopupProps) 
             />
             <CancelPopup
                 cancelPopupVisible={props.cancelPopupVisible}
-                setCancelPopupVisible={props.setCancelPopupVisible}
                 handlePressNotDone={props.handlePressNotDone}
+                setCancelPopupVisible={props.setCancelPopupVisible}
+                setIsPlaying={props.setIsPlaying}
             />
             <ShowPointsPopup
                 showPointsPopupVisible={props.showPointsPopupVisible}

@@ -39,8 +39,8 @@ const triggerWaterNotifications = async () => {
     for (let i = 0; i < hours.length; i++) {
         await Notifications.scheduleNotificationAsync({
             content: {
-                title: "Hast du durst?",
-                body: "Trink dein Wasser!",
+                title: "Wasser bereit!",
+                body: "Öffne mich und trinke ein Glas Wasser!",
                 data: {data: "goes here"},
             },
             trigger: {
@@ -51,7 +51,6 @@ const triggerWaterNotifications = async () => {
             },
         });
     }
-    console.log("I scheduled water")
 }
 
 const triggerSquatsNotifications = async () => {
@@ -61,8 +60,8 @@ const triggerSquatsNotifications = async () => {
     for (let i = 0; i < hours.length; i++) {
         await Notifications.scheduleNotificationAsync({
             content: {
-                title: "Bist du sportlich unterwegs?",
-                body: "Mach deine Squats!",
+                title: "Kniebeugen, los geht's!",
+                body: "Öffne mich und mache 15 Kniebeugen!",
                 data: {data: "goes here"},
             },
             trigger: {
@@ -73,7 +72,6 @@ const triggerSquatsNotifications = async () => {
             },
         });
     }
-    console.log("I scheduled squats")
 }
 
 const triggerMeditationNotifications = async () => {
@@ -83,8 +81,8 @@ const triggerMeditationNotifications = async () => {
     for (let i = 0; i < hours.length; i++) {
         await Notifications.scheduleNotificationAsync({
             content: {
-                title: "Bist du entspannt?",
-                body: "Meditiere!",
+                title: "Es ist soweit, Meditation!",
+                body: "Öffne mich und entspanne dich für eine Minute!",
                 data: {data: "goes here"},
             },
             trigger: {
@@ -95,7 +93,6 @@ const triggerMeditationNotifications = async () => {
             },
         });
     }
-    console.log("I scheduled meditation")
 }
 
 export const triggerNotifications = async () => {

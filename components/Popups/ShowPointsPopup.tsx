@@ -30,7 +30,7 @@ export default function ShowPointsPopup(props: ShowPointsPopup) {
                 }}
             >
                 <Text style={{fontSize: widthDP("4%"), fontWeight: "bold"}}>
-                    Cool! So mache ich weiter!
+                    Okay
                 </Text>
             </Pressable>
         </ModalPopup>

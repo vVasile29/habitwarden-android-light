@@ -115,7 +115,7 @@ export default function Statistics() {
     function markAllDates(completed: UserHabitDataWithDate[], incompleted: UserHabitDataWithDate[]) {
         const marked: MarkedDates = {};
         mark(completed.map(dataWithDate => dataWithDate.date), "#82c91e");
-        mark(incompleted.map(dataWithDate => dataWithDate.date), "red");
+        mark(incompleted.map(dataWithDate => dataWithDate.date), "yellow");
 
         function mark(dates: string[], color: string) {
             dates.forEach(date => {

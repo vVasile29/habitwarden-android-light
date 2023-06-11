@@ -69,17 +69,7 @@ export function useSaveData() {
 
             if (done) {
                 await axios.post(`${API}/user/savePoints/${pointsPerTask}`)
-            } else {
-                await axios.post(`${API}/user/removePoints/${pointsPerTask}`)
-                Alert.alert(
-                    "Achtung!",
-                    "Ohne Einhaltung von Gewohnheiten können negative Folgen eintreten: \n" +
-                    "Gesundheitsprobleme, geringere Produktivität und schlechtere Lebensqualität.",
-                    [{
-                        text: 'OK',
-                        style: "default"
-                    }])
-            }
+            };
         } catch (e) {
             console.log(e);
         }
@@ -94,7 +84,7 @@ export default function Habits() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.textLeft}>Abbruchrate{"\n"}aller{"\n"}Nutzer</Text>
+            {/*<Text style={styles.textLeft}>Abbruchrate{"\n"}aller{"\n"}Nutzer</Text>*/}
             <Text style={styles.textRight}>Deine{"\n"}Streak</Text>
             <HabitSummary
                 habitName={WATER}

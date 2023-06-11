@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "habitwarden",
-    "slug": "habitwarden-android-dark",
+    "slug": "habitwarden-android-light",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -33,7 +33,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "8f8c18e2-9b0b-4f50-885c-c7497baac711"
+        "projectId": "cda5a8fa-4720-46fd-bd4c-a7497e256efa"
       }
     }
   }

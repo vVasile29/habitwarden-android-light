@@ -1,24 +1,20 @@
-import {View, Button, Text, Pressable, Alert} from 'react-native';
 import React, {useState} from "react";
-import moment from 'moment';
 import 'moment/locale/de';
 import {useRouter} from "expo-router";
 import {useFetchPointsPerTask, useSaveData, WATER} from "../(tabs)/habits";
 import {Habit} from "../../components/HabitSummary";
 import WaterLogo from "../../assets/svg/WaterLogo";
-import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
 import {heightDP} from "../../constants/DpScaling";
+import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
+import {View} from "../../components/Themed";
 
 export default function Water() {
     const [liePopupVisible, setLiePopupVisible] = useState(false);
-    const [losePointsWarningPopupVisible, setLosePointsWarningPopupVisible] = useState(false);
-    const [shameCheckbox, setShameCheckbox] = useState(false);
-    const [losePointsPopupVisible, setLosePointsPopupVisible] = useState(false);
     const [showPointsPopupVisible, setShowPointsPopupVisible] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(true)
     const [habit, setHabit] = useState<Habit>();
     const [lieOnDone, setLieOnDone] = useState(false);
     const [wantedToQuit, setWantedToQuit] = useState(false);
+    const [cancelPopupVisible, setCancelPopupVisible] = useState(false);
     const router = useRouter();
 
     const habitPromise = useFetchPointsPerTask(WATER);
@@ -26,7 +22,6 @@ export default function Water() {
     const saveData = useSaveData();
 
     async function handlePressDone() {
-        setIsPlaying(prev => !prev)
         setLiePopupVisible(true);
     }
 
@@ -41,39 +36,29 @@ export default function Water() {
         router.replace("/habits");
     }
 
-    async function handleShowPointsClose(){
+    async function handleShowPointsClose() {
         setShowPointsPopupVisible(false);
         router.replace("/habits");
     }
 
     return (
-        <HabitScreenWithPopups
-            isPlaying={isPlaying}
-            duration={35}
-            setLiePopupVisible={setLiePopupVisible}
-            taskDescription={"Bitte trinke " + habit?.amountPerTask! + "ml Wasser!"}
-            logo={<WaterLogo position={"relative"} width={heightDP("33%")} height={heightDP("33%")}/>}
-            liePopupVisible={liePopupVisible}
-            handlePressYesOnDone={handlePressYesOnDone}
-            setLieOnDone={setLieOnDone}
-            losePointsWarningPopupVisible={losePointsWarningPopupVisible}
-            handlePressDone={handlePressDone}
-            fakeUserCancellationDescription={
-                "Es ist doch nur ein Glas Wasser?\n" +
-                "Wieso würdest du jetzt aufgeben wollen, \n" +
-                "hier geben im Durchschnitt nur " + habit?.fakeUserCancellationRate! * 100 + "% auf?"
-            }
-            shameCheckbox={shameCheckbox}
-            setShameCheckbox={setShameCheckbox}
-            setLosePointsWarningPopupVisible={setLosePointsWarningPopupVisible}
-            setLosePointsPopupVisible={setLosePointsPopupVisible}
-            setIsPlaying={setIsPlaying}
-            losePointsPopupVisible={losePointsPopupVisible}
-            pointsPerTask={habit?.pointsPerTask!}
-            handlePressNotDone={handlePressNotDone}
-            setWantedToQuit={setWantedToQuit}
-            showPointsPopupVisible={showPointsPopupVisible}
-            handleShowPointsClose={handleShowPointsClose}
-        />
+        <View style={{flex: 1, justifyContent: "center"}}>
+            <HabitScreenWithPopups
+                logo={<WaterLogo position={"relative"} width={heightDP("50%")} height={heightDP("50%")}/>}
+                taskDescription={"Bitte trinke " + habit?.amountPerTask! + "ml Wasser!"}
+                pointsPerTask={habit?.pointsPerTask!}
+                liePopupVisible={liePopupVisible}
+                setLiePopupVisible={setLiePopupVisible}
+                handlePressDone={handlePressDone}
+                handlePressYesOnDone={handlePressYesOnDone}
+                handlePressNotDone={handlePressNotDone}
+                setLieOnDone={setLieOnDone}
+                setWantedToQuit={setWantedToQuit}
+                showPointsPopupVisible={showPointsPopupVisible}
+                handleShowPointsClose={handleShowPointsClose}
+                cancelPopupVisible={cancelPopupVisible}
+                setCancelPopupVisible={setCancelPopupVisible}
+            />
+        </View>
     );
 }

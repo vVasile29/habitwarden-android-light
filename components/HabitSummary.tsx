@@ -147,7 +147,8 @@ const HabitSummary = (props: HabitSummaryProps) => {
 
     return (
         <View style={styles.summary}>
-            <Text style={styles.rate}>{fakeUserCancellationRate * 100}%</Text>
+            <View style={styles.rate}></View>
+            {/*<Text style={styles.rate}>{fakeUserCancellationRate * 100}%</Text>*/}
             <View style={styles.habitButton}>
                 <HabitButton
                     habitName={props.habitName}
@@ -160,7 +161,7 @@ const HabitSummary = (props: HabitSummaryProps) => {
                 />
             </View>
             <View style={styles.streak}>
-                {streak !== 0 && <Text style={styles.streakFlame}>🔥</Text>}
+                {/*{streak !== 0 && <Text style={styles.streakFlame}>🔥</Text>}*/}
                 <Text style={styles.streakText}>{streak}</Text>
             </View>
         </View>

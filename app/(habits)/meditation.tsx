@@ -5,7 +5,7 @@ import {useRouter} from "expo-router";
 import {MEDITATION, useFetchPointsPerTask, useSaveData, WATER} from "../(tabs)/habits";
 import {Habit} from "../../components/HabitSummary";
 import MeditationLogo from "../../assets/svg/MeditationLogo";
-import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
+import HabitScreenTimerWithPopups from "../../components/HabitScreenTimerWithPopups";
 import {heightDP, widthDP} from "../../constants/DpScaling";
 
 export default function Meditation() {
@@ -18,6 +18,7 @@ export default function Meditation() {
     const [habit, setHabit] = useState<Habit>();
     const [lieOnDone, setLieOnDone] = useState(false);
     const [wantedToQuit, setWantedToQuit] = useState(false);
+    const [cancelPopupVisible, setCancelPopupVisible] = useState(false);
     const router = useRouter();
 
     const habitPromise = useFetchPointsPerTask(MEDITATION);
@@ -36,17 +37,17 @@ export default function Meditation() {
     }
 
     async function handlePressNotDone() {
-        await saveData(WATER, false, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
+        await saveData(MEDITATION, false, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
         router.replace("/habits");
     }
 
-    async function handleShowPointsClose(){
+    async function handleShowPointsClose() {
         setShowPointsPopupVisible(false);
         router.replace("/habits");
     }
 
     return (
-        <HabitScreenWithPopups
+        <HabitScreenTimerWithPopups
             isPlaying={isPlaying}
             duration={60}
             setLiePopupVisible={setLiePopupVisible}
@@ -55,24 +56,15 @@ export default function Meditation() {
             liePopupVisible={liePopupVisible}
             handlePressYesOnDone={handlePressYesOnDone}
             setLieOnDone={setLieOnDone}
-            losePointsWarningPopupVisible={losePointsWarningPopupVisible}
             handlePressDone={handlePressDone}
-            fakeUserCancellationDescription={
-                "Wer hat denn bitte etwas gegen Entspannung?\n" +
-                "Wieso würdest du jetzt aufgeben wollen, \n" +
-                "hier geben im Durchschnitt nur " + habit?.fakeUserCancellationRate! * 100 + "% auf?"
-            }
-            shameCheckbox={shameCheckbox}
-            setShameCheckbox={setShameCheckbox}
-            setLosePointsWarningPopupVisible={setLosePointsWarningPopupVisible}
-            setLosePointsPopupVisible={setLosePointsPopupVisible}
             setIsPlaying={setIsPlaying}
-            losePointsPopupVisible={losePointsPopupVisible}
             pointsPerTask={habit?.pointsPerTask!}
             handlePressNotDone={handlePressNotDone}
             setWantedToQuit={setWantedToQuit}
             showPointsPopupVisible={showPointsPopupVisible}
             handleShowPointsClose={handleShowPointsClose}
+            cancelPopupVisible={cancelPopupVisible}
+            setCancelPopupVisible={setCancelPopupVisible}
         />
     );
 }
