@@ -4,18 +4,8 @@ import moment from 'moment';
 import 'moment/locale/de';
 import {useRouter} from "expo-router";
 import {useFetchPointsPerTask, useSaveData, WATER} from "../(tabs)/habits";
-import {CountdownCircleTimer} from 'react-native-countdown-circle-timer';
 import {Habit} from "../../components/HabitSummary";
-import ModalPopup from "../../components/ModalPopup";
 import WaterLogo from "../../assets/svg/WaterLogo";
-import {CheckBox} from "react-native-elements";
-import CryBaby from "../../assets/svg/CryBaby";
-import Explosion from "../../assets/svg/Explosion";
-import LonelyGuy from "../../assets/svg/LonelyGuy";
-import HabitScreen from "../../components/habitScreen";
-import LiePopup from "../../components/Popups/LiePopup";
-import LosePointsWarningPopup from "../../components/Popups/LosePointsWarningPopup";
-import LosePointsPopup from "../../components/Popups/LosePointsPopup";
 import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
 import {heightDP} from "../../constants/DpScaling";
 
@@ -24,9 +14,11 @@ export default function Water() {
     const [losePointsWarningPopupVisible, setLosePointsWarningPopupVisible] = useState(false);
     const [shameCheckbox, setShameCheckbox] = useState(false);
     const [losePointsPopupVisible, setLosePointsPopupVisible] = useState(false);
+    const [showPointsPopupVisible, setShowPointsPopupVisible] = useState(false);
     const [isPlaying, setIsPlaying] = useState(true)
     const [habit, setHabit] = useState<Habit>();
     const [lieOnDone, setLieOnDone] = useState(false);
+    const [wantedToQuit, setWantedToQuit] = useState(false);
     const router = useRouter();
 
     const habitPromise = useFetchPointsPerTask(WATER);
@@ -40,14 +32,17 @@ export default function Water() {
 
     async function handlePressYesOnDone() {
         setLiePopupVisible(false)
-        const currentDate = moment().locale('de').format('YYYY-MM-DD');
-        await saveData(habit?.name!, currentDate, true, lieOnDone, habit?.pointsPerTask!);
-        router.replace("/habits");
+        await saveData(habit?.name!, true, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
+        setShowPointsPopupVisible(true);
     }
 
     async function handlePressNotDone() {
-        const currentDate = moment().locale('de').format('YYYY-MM-DD');
-        await saveData(WATER, currentDate, false, lieOnDone, habit?.pointsPerTask!);
+        await saveData(WATER, false, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
+        router.replace("/habits");
+    }
+
+    async function handleShowPointsClose(){
+        setShowPointsPopupVisible(false);
         router.replace("/habits");
     }
 
@@ -76,6 +71,9 @@ export default function Water() {
             losePointsPopupVisible={losePointsPopupVisible}
             pointsPerTask={habit?.pointsPerTask!}
             handlePressNotDone={handlePressNotDone}
+            setWantedToQuit={setWantedToQuit}
+            showPointsPopupVisible={showPointsPopupVisible}
+            handleShowPointsClose={handleShowPointsClose}
         />
     );
 }

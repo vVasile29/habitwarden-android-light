@@ -18,8 +18,8 @@ export interface Habit {
     fakeUserCancellationRate: number;
 }
 
-interface HabitDoneData {
-    doneDate: string;
+export interface HabitDoneData {
+    habitName: string;
     habitDoneDataInfo: HabitDoneDataInfo[];
 }
 
@@ -27,6 +27,7 @@ interface HabitDoneDataInfo {
     doneTime: string;
     done: boolean;
     lieOnDone: boolean;
+    wantedToQuit: boolean;
 }
 
 interface HabitSummaryProps {
@@ -59,20 +60,18 @@ const HabitSummary = (props: HabitSummaryProps) => {
             const userName = await SecureStore.getItemAsync(USER_KEY);
 
             const [habitResponse, habitDoneDataResponse, latestHabitDoneDataResponse, streakResponse] = await Promise.all([
-                axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`),
-                axios.post<HabitDoneData>(`${API}/dateData/getCurrentHabitDoneDataOfUser`, {
+                await axios.get<Habit>(`${API}/habits/getHabit/${props.habitName}`),
+                await axios.post<HabitDoneData>(`${API}/dateData/getCurrentHabitDoneDataOfUser`, {
                     userName: userName,
                     habitName: habitName,
-                    date: moment().locale('de').format('YYYY-MM-DD')
                 }),
-                axios.post<HabitDoneData>(`${API}/dateData/getLastHabitDoneDataOfUser`, {
+                await axios.post<HabitDoneData>(`${API}/dateData/getLastHabitDoneDataOfUser`, {
                     userName: userName,
                     habitName: habitName
                 }),
-                axios.post(`${API}/dateData/getStreak`, {
+                await axios.post(`${API}/dateData/getStreak`, {
                     userName: userName,
                     habitName: habitName,
-                    date: moment().locale('de').format('YYYY-MM-DD')
                 }),
             ]);
 
@@ -81,33 +80,46 @@ const HabitSummary = (props: HabitSummaryProps) => {
             setFakeUserCancellationRate(habit.fakeUserCancellationRate);
 
             const habitDoneData = habitDoneDataResponse.data;
-            const done = habitDoneData?.habitDoneDataInfo?.filter(habitDoneDataInfo => habitDoneDataInfo.done).length;
-            setDoneAmountAmount(done ?? 0);
+            const done = habitDoneData?.habitDoneDataInfo?.filter(
+                habitDoneDataInfo => habitDoneDataInfo.done).length ?? 0;
+            setDoneAmountAmount(done);
 
             const streak = streakResponse.data;
             setStreak(streak);
 
             const latestHabitDoneData = latestHabitDoneDataResponse.data;
-
             const lastDoneTime = moment(latestHabitDoneData?.habitDoneDataInfo?.at(-1)?.doneTime);
             const currentTime = moment();
 
-            const inCurrentSchedule = schedule.find((schedule: { startTime: string; endTime: string }) => {
+            const currentSchedule = schedule.find((schedule: { startTime: string; endTime: string }) => {
                 const startTime = moment(schedule.startTime, 'HH:mm');
                 const endTime = moment(schedule.endTime, 'HH:mm');
                 return startTime.isSameOrBefore(currentTime) && endTime.isSameOrAfter(currentTime);
             });
 
-            if (inCurrentSchedule!! && (!latestHabitDoneData || !latestHabitDoneData.habitDoneDataInfo)) {
+            const tasksLeft = done !== habit.timesPerDay;
+            const inCurrentSchedule = !!currentSchedule;
+            const thisTaskNotDoneYet = !latestHabitDoneData.habitDoneDataInfo
+            const noTasksDoneYet = !latestHabitDoneData;
+
+            if (!inCurrentSchedule) {
+                setLoading(false);
+                return;
+            }
+
+            if (tasksLeft && (noTasksDoneYet || thisTaskNotDoneYet)) {
                 setIsButtonClickable(true);
                 setLoading(false);
                 return;
             }
 
+            const lastDoneHourMinutes = moment(lastDoneTime.format('HH:mm'), "hoursToMinutes");
+            const currentStartTime = moment(currentSchedule.startTime, "hoursToMinutes");
+
             setIsButtonClickable(
-                inCurrentSchedule!! &&
                 lastDoneTime.isSame(currentTime, 'day') &&
-                lastDoneTime.format('HH:mm') < inCurrentSchedule.startTime
+                lastDoneTime.format('HH:mm') < currentSchedule.startTime &&
+                lastDoneHourMinutes.isBefore(currentStartTime)
             );
 
             setLoading(false);

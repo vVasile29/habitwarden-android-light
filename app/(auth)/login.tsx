@@ -45,7 +45,7 @@ const LoginForm = () => {
                 disabled={!name || !password}
                 onPress={login}
             />
-            <Text onPress={() => router.replace("/register")}>Not registered yet?</Text>
+            <Text onPress={() => router.replace("/register")}>{"\n"}Not registered yet?</Text>
         </View>
     );
 };

@@ -99,7 +99,7 @@ const triggerMeditationNotifications = async () => {
 }
 
 export const triggerNotifications = async () => {
-    console.log("I am triggering all the notifications!")
+    console.log("lemme see if I should trigger notifications...");
     const isFirstLogin = await AsyncStorage.getItem('isFirstLogin');
     console.log("isFirstLogin: " + isFirstLogin)
     if (isFirstLogin === null) {

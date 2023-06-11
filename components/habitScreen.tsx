@@ -10,6 +10,7 @@ interface HabitScreenProps {
     taskDescription: string;
     handlePressDone: () => Promise<void>;
     setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+    setWantedToQuit: React.Dispatch<React.SetStateAction<boolean>>;
     setLosePointsWarningPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
     logo: any;
 }
@@ -20,7 +21,7 @@ export default function HabitScreen(props: HabitScreenProps) {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            paddingTop: heightDP("2.5%"),
+            paddingTop: heightDP("15%"),
             gap: heightDP("1%")
         }}>
             <CountdownCircleTimer
@@ -58,13 +59,10 @@ export default function HabitScreen(props: HabitScreenProps) {
             >
                 <Text style={{fontSize: heightDP("2.5%"), fontWeight: "bold"}}>Fertig</Text>
             </Pressable>
-            {/*<Pressable*/}
-            {/*    onPress={() => router.replace("/habits")}>*/}
-            {/*    <Text>Zurück zu Habits</Text>*/}
-            {/*</Pressable>*/}
             <Pressable
                 style={{top: heightDP("3%")}}
                 onPress={() => {
+                    props.setWantedToQuit(true);
                     props.setIsPlaying(false);
                     props.setLosePointsWarningPopupVisible(true);
                 }}>

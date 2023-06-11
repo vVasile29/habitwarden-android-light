@@ -1,16 +1,9 @@
-import {Button, View} from "react-native";
 import React, {useState} from "react";
-import moment from 'moment';
 import 'moment/locale/de';
 import {useRouter} from "expo-router";
-import {SQUATS, useFetchPointsPerTask, useSaveData} from "../(tabs)/habits";
+import {SQUATS, useFetchPointsPerTask, useSaveData, WATER} from "../(tabs)/habits";
 import {Habit} from "../../components/HabitSummary";
-import HabitScreen from "../../components/habitScreen";
-import LiePopup from "../../components/Popups/LiePopup";
-import LosePointsWarningPopup from "../../components/Popups/LosePointsWarningPopup";
-import LosePointsPopup from "../../components/Popups/LosePointsPopup";
 import SquatsLogo from "../../assets/svg/SquatsLogo";
-import WaterLogo from "../../assets/svg/WaterLogo";
 import HabitScreenWithPopups from "../../components/HabitScreenWithPopups";
 import {heightDP, widthDP} from "../../constants/DpScaling";
 
@@ -19,9 +12,11 @@ export default function Squats() {
     const [losePointsWarningPopupVisible, setLosePointsWarningPopupVisible] = useState(false);
     const [shameCheckbox, setShameCheckbox] = useState(false);
     const [losePointsPopupVisible, setLosePointsPopupVisible] = useState(false);
+    const [showPointsPopupVisible, setShowPointsPopupVisible] = useState(false);
     const [isPlaying, setIsPlaying] = useState(true)
     const [habit, setHabit] = useState<Habit>();
     const [lieOnDone, setLieOnDone] = useState(false);
+    const [wantedToQuit, setWantedToQuit] = useState(false);
     const router = useRouter();
 
     const habitPromise = useFetchPointsPerTask(SQUATS);
@@ -35,14 +30,17 @@ export default function Squats() {
 
     async function handlePressYesOnDone() {
         setLiePopupVisible(false)
-        const currentDate = moment().locale('de').format('YYYY-MM-DD');
-        await saveData(habit?.name!, currentDate, true, lieOnDone, habit?.pointsPerTask!);
-        router.replace("/habits");
+        await saveData(habit?.name!, true, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
+        setShowPointsPopupVisible(true);
     }
 
     async function handlePressNotDone() {
-        const currentDate = moment().locale('de').format('YYYY-MM-DD');
-        await saveData(SQUATS, currentDate, false, lieOnDone, habit?.pointsPerTask!);
+        await saveData(WATER, false, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
+        router.replace("/habits");
+    }
+
+    async function handleShowPointsClose(){
+        setShowPointsPopupVisible(false);
         router.replace("/habits");
     }
 
@@ -56,6 +54,7 @@ export default function Squats() {
             liePopupVisible={liePopupVisible}
             handlePressYesOnDone={handlePressYesOnDone}
             setLieOnDone={setLieOnDone}
+            setWantedToQuit={setWantedToQuit}
             losePointsWarningPopupVisible={losePointsWarningPopupVisible}
             handlePressDone={handlePressDone}
             fakeUserCancellationDescription={
@@ -71,6 +70,8 @@ export default function Squats() {
             losePointsPopupVisible={losePointsPopupVisible}
             pointsPerTask={habit?.pointsPerTask!}
             handlePressNotDone={handlePressNotDone}
+            showPointsPopupVisible={showPointsPopupVisible}
+            handleShowPointsClose={handleShowPointsClose}
         />
     );
 }

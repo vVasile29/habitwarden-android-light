@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import {useEffect, useRef, useState} from "react";
 
-
 // @ts-ignore
 export default function ModalPopup({visible, children}) {
     const [showModal, setShowModal] = useState(visible);

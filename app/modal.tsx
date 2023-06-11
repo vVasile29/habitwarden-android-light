@@ -1,33 +1,57 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import {Button, Platform, StyleSheet} from 'react-native';
 
-import { Text, View } from '../components/Themed';
+import {Text, View} from '../components/Themed';
+import {widthDP} from "../constants/DpScaling";
+import React from "react";
 
 export default function ModalScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>Habitwarden</Text>
+            <View style={styles.infoContainer}>
+                <Text style={styles.infoText}>
+                    Bei dieser App geht es darum, die Habits Trinken, Kniebeugen und Meditation mehrere Male pro Tag
+                    durchzuführen.
+                </Text>
+                <Text style={styles.infoText}>
+                    Du kannst dir auf der Statistiken-Seite anschauen, wie oft du deine Habits pro Tag ausgeführt hast.
+                </Text>
+                <Text style={styles.infoText}>
+                    Pro Habit sammelst du Punkte, die die jedoch auch wieder verlieren kannst, falls du sie abbrichst.
+                    Deinen Punktestand kannst du dir in der Profil-Seite anschauen.
+                </Text>
+            </View>
+            <Text style={styles.haveFunText}>Viel Spaß!</Text>
+        </View>
+    );
 }
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        padding: 16,
+    },
+    title: {
+        fontSize: widthDP("10%"),
+        fontWeight: 'bold',
+        marginBottom: widthDP("10%"),
+        textAlign: 'center',
+    },
+    infoContainer: {
+        alignItems: 'flex-start',
+        marginBottom: 16,
+    },
+    infoText: {
+        fontSize: widthDP("5%"),
+        textAlign: "center",
+        marginBottom: 16,
+    },
+    haveFunText: {
+        fontSize: widthDP("7%"),
+        fontWeight: 'bold',
+        marginTop: widthDP("10%"),
+        textAlign: 'center',
+    }
 });

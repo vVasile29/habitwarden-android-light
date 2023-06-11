@@ -6,34 +6,31 @@ import React, {useState} from "react";
 import {heightDP, widthDP} from "../../constants/DpScaling";
 
 
-interface LosePointsPopupProps {
-    losePointsPopupVisible: boolean;
+interface ShowPointsPopup {
+    showPointsPopupVisible: boolean;
     pointsPerTask: number;
-    handlePressNotDone: () => Promise<void>;
+    handleClose: () => Promise<void>;
 }
 
-export default function LosePointsPopup(props: LosePointsPopupProps) {
-    const [disableButton, setDisableButton] = useState(false);
+export default function ShowPointsPopup(props: ShowPointsPopup) {
     return (
-        <ModalPopup visible={props.losePointsPopupVisible}>
+        <ModalPopup visible={props.showPointsPopupVisible}>
             <View style={{display: "flex", flexDirection: "column", justifyContent: "center", gap: 10}}></View>
-            <Text style={{fontSize: widthDP("12%"), color: "red", textAlign: 'center', fontWeight: "bold"}}>
-                {props.pointsPerTask} Punkte verloren!
+            <Text style={{fontSize: widthDP("12%"), color: "#82c91e", textAlign: 'center', fontWeight: "bold"}}>
+                {props.pointsPerTask} Punkte bekommen!
             </Text>
             <View style={{display: "flex", flexDirection: "row", justifyContent: "center", gap: 10}}>
-                <CryBaby position={"relative"} width={widthDP("45%")} height={heightDP("25%")}/>
-                <Explosion position={"relative"} width={widthDP("45%")} height={heightDP("25%")}/>
+                <Text style={{fontSize: 100, textAlign: "center", marginBottom: 15}}>🥳</Text>
+                <Text style={{fontSize: 100, textAlign: "center", marginBottom: 15}}>🎉</Text>
             </View>
             <Pressable
                 style={styles.pressable}
-                disabled={disableButton}
                 onPress={() => {
-                    setDisableButton(true);
-                    props.handlePressNotDone();
+                    props.handleClose();
                 }}
             >
                 <Text style={{fontSize: widthDP("4%"), fontWeight: "bold"}}>
-                    Okay, nächstes Mal breche ich nicht ab.
+                    Cool! So mache ich weiter!
                 </Text>
             </Pressable>
         </ModalPopup>
@@ -43,7 +40,7 @@ export default function LosePointsPopup(props: LosePointsPopupProps) {
 const styles = StyleSheet.create({
     pressable: {
         alignItems: 'center',
-        backgroundColor: '#4c6ef5',
+        backgroundColor: '#82c91e',
         padding: 10,
         width: "100%",
         borderColor: "black",

@@ -9,7 +9,8 @@ import MeditationLogo from "../../assets/svg/MeditationLogo";
 import {API, USER_KEY} from "../context/AuthContext";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { heightDP } from '../../constants/DpScaling';
+import {heightDP} from '../../constants/DpScaling';
+import ShowPointsPopup from "../../components/Popups/ShowPointsPopup";
 
 export const WATER = "water";
 export const SQUATS = "squats";
@@ -53,7 +54,7 @@ export async function useFetchPointsPerTask(habitName: string) {
 }
 
 export function useSaveData() {
-    return async (habitName: string, date: string, done: boolean, lieOnDone: boolean, pointsPerTask: number) => {
+    return async (habitName: string, done: boolean, lieOnDone: boolean, wantedToQuit: boolean, pointsPerTask: number) => {
         const userName = await SecureStore.getItemAsync(USER_KEY);
 
         try {
@@ -61,17 +62,23 @@ export function useSaveData() {
             await axios.post(`${API}/dateData/saveDateData`, {
                 userName,
                 habitName,
-                date,
                 done,
-                lieOnDone
+                lieOnDone,
+                wantedToQuit
             });
 
             if (done) {
                 await axios.post(`${API}/user/savePoints/${pointsPerTask}`)
-                Alert.alert(pointsPerTask + " Punkte bekommen!")
             } else {
                 await axios.post(`${API}/user/removePoints/${pointsPerTask}`)
-                Alert.alert("Achtung!")
+                Alert.alert(
+                    "Achtung!",
+                    "Ohne Einhaltung von Gewohnheiten können negative Folgen eintreten: \n" +
+                    "Gesundheitsprobleme, geringere Produktivität und schlechtere Lebensqualität.",
+                    [{
+                        text: 'OK',
+                        style: "default"
+                    }])
             }
         } catch (e) {
             console.log(e);
@@ -91,21 +98,24 @@ export default function Habits() {
             <Text style={styles.textRight}>Deine{"\n"}Streak</Text>
             <HabitSummary
                 habitName={WATER}
-                logo={<WaterLogo position={"absolute"} top={heightDP("4.3%")} width={heightDP("12%")} height={heightDP("12%")}/>}
+                logo={<WaterLogo position={"absolute"} top={heightDP("4.3%")} width={heightDP("12%")}
+                                 height={heightDP("12%")}/>}
                 onLoading={setWaterLoading}
                 allSiblingsLoaded={allSiblingsLoaded}
                 schedule={waterSchedule}
             />
             <HabitSummary
                 habitName={SQUATS}
-                logo={<SquatsLogo position={"absolute"} top={heightDP("-0.3%")} left={heightDP("2.7%")} width={heightDP("21%")} height={heightDP("21%")}/>}
+                logo={<SquatsLogo position={"absolute"} top={heightDP("-0.3%")} left={heightDP("2.7%")}
+                                  width={heightDP("21%")} height={heightDP("21%")}/>}
                 onLoading={setSquatsLoading}
                 allSiblingsLoaded={allSiblingsLoaded}
                 schedule={squatsSchedule}
             />
             <HabitSummary
                 habitName={MEDITATION}
-                logo={<MeditationLogo position={"absolute"} top={heightDP("-2.3%")} width={heightDP("25%")} height={heightDP("25%")}/>}
+                logo={<MeditationLogo position={"absolute"} top={heightDP("-2.3%")} width={heightDP("25%")}
+                                      height={heightDP("25%")}/>}
                 onLoading={setMeditationLoading}
                 allSiblingsLoaded={allSiblingsLoaded}
                 schedule={meditationSchedule}

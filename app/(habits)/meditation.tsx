@@ -1,4 +1,3 @@
-import {Button, View} from "react-native";
 import React, {useState} from "react";
 import moment from 'moment';
 import 'moment/locale/de';
@@ -14,9 +13,11 @@ export default function Meditation() {
     const [losePointsWarningPopupVisible, setLosePointsWarningPopupVisible] = useState(false);
     const [shameCheckbox, setShameCheckbox] = useState(false);
     const [losePointsPopupVisible, setLosePointsPopupVisible] = useState(false);
+    const [showPointsPopupVisible, setShowPointsPopupVisible] = useState(false);
     const [isPlaying, setIsPlaying] = useState(true)
     const [habit, setHabit] = useState<Habit>();
     const [lieOnDone, setLieOnDone] = useState(false);
+    const [wantedToQuit, setWantedToQuit] = useState(false);
     const router = useRouter();
 
     const habitPromise = useFetchPointsPerTask(MEDITATION);
@@ -30,14 +31,17 @@ export default function Meditation() {
 
     async function handlePressYesOnDone() {
         setLiePopupVisible(false)
-        const currentDate = moment().locale('de').format('YYYY-MM-DD');
-        await saveData(habit?.name!, currentDate, true, lieOnDone, habit?.pointsPerTask!);
-        router.replace("/habits");
+        await saveData(habit?.name!, true, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
+        setShowPointsPopupVisible(true);
     }
 
     async function handlePressNotDone() {
-        const currentDate = moment().locale('de').format('YYYY-MM-DD');
-        await saveData(MEDITATION, currentDate, false, lieOnDone, habit?.pointsPerTask!);
+        await saveData(WATER, false, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
+        router.replace("/habits");
+    }
+
+    async function handleShowPointsClose(){
+        setShowPointsPopupVisible(false);
         router.replace("/habits");
     }
 
@@ -66,6 +70,9 @@ export default function Meditation() {
             losePointsPopupVisible={losePointsPopupVisible}
             pointsPerTask={habit?.pointsPerTask!}
             handlePressNotDone={handlePressNotDone}
+            setWantedToQuit={setWantedToQuit}
+            showPointsPopupVisible={showPointsPopupVisible}
+            handleShowPointsClose={handleShowPointsClose}
         />
     );
 }

@@ -31,7 +31,7 @@ export default function TabLayout() {
                 options={{
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
                     tabBarActiveBackgroundColor: "#fd7e14",
-                    tabBarInactiveBackgroundColor: "#f59749",
+                    tabBarInactiveBackgroundColor: "#fd7e14",
                     headerRight: () => (
                         <Link href="/modal" asChild>
                             <Pressable>
@@ -53,7 +53,7 @@ export default function TabLayout() {
                 options={{
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
                     tabBarActiveBackgroundColor: "#fd7e14",
-                    tabBarInactiveBackgroundColor: "#f59749",
+                    tabBarInactiveBackgroundColor: "#fd7e14",
                 }}
             />
             <Tabs.Screen
@@ -61,7 +61,7 @@ export default function TabLayout() {
                 options={{
                     tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
                     tabBarActiveBackgroundColor: "#fd7e14",
-                    tabBarInactiveBackgroundColor: "#f59749",
+                    tabBarInactiveBackgroundColor: "#fd7e14",
                 }}
             />
         </Tabs>

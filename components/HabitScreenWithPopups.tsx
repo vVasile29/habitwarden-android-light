@@ -3,6 +3,7 @@ import LiePopup from "./Popups/LiePopup";
 import LosePointsWarningPopup from "./Popups/LosePointsWarningPopup";
 import LosePointsPopup from "./Popups/LosePointsPopup";
 import React from "react";
+import ShowPointsPopup from "./Popups/ShowPointsPopup";
 
 interface HabitScreenWithPopupProps {
     isPlaying: boolean;
@@ -16,6 +17,7 @@ interface HabitScreenWithPopupProps {
     liePopupVisible: boolean;
     handlePressYesOnDone: () => Promise<void>;
     setLieOnDone: React.Dispatch<React.SetStateAction<boolean>>;
+    setWantedToQuit: React.Dispatch<React.SetStateAction<boolean>>;
     losePointsWarningPopupVisible: boolean;
     pointsPerTask: number;
     fakeUserCancellationDescription: string;
@@ -24,6 +26,8 @@ interface HabitScreenWithPopupProps {
     setLosePointsPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
     losePointsPopupVisible: boolean;
     handlePressNotDone: () => Promise<void>;
+    showPointsPopupVisible: boolean;
+    handleShowPointsClose: () => Promise<void>;
 }
 
 export default function HabitScreenWithPopups(props: HabitScreenWithPopupProps){
@@ -36,6 +40,7 @@ export default function HabitScreenWithPopups(props: HabitScreenWithPopupProps){
                 taskDescription={props.taskDescription}
                 handlePressDone={props.handlePressDone}
                 setIsPlaying={props.setIsPlaying}
+                setWantedToQuit={props.setWantedToQuit}
                 setLosePointsWarningPopupVisible={props.setLosePointsWarningPopupVisible}
                 logo={props.logo}
             />
@@ -60,6 +65,11 @@ export default function HabitScreenWithPopups(props: HabitScreenWithPopupProps){
                 losePointsPopupVisible={props.losePointsPopupVisible}
                 pointsPerTask={props.pointsPerTask}
                 handlePressNotDone={props.handlePressNotDone}
+            />
+            <ShowPointsPopup
+                showPointsPopupVisible={props.showPointsPopupVisible}
+                pointsPerTask={props.pointsPerTask}
+                handleClose={props.handleShowPointsClose}
             />
         </>
     );
