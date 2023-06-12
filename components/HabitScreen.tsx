@@ -42,6 +42,8 @@ export default function HabitScreen(props: HabitScreenProps) {
                     }}>
                     <Text style={{fontSize: heightDP("2.5%"), fontWeight: "bold"}}>Abbrechen</Text>
                 </Pressable>
+
+                
                 <Pressable
                     style={{
                         alignItems: 'center',

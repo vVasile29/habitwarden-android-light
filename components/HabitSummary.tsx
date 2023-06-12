@@ -88,7 +88,12 @@ const HabitSummary = (props: HabitSummaryProps) => {
             setStreak(streak);
 
             const latestHabitDoneData = latestHabitDoneDataResponse.data;
-            const lastDoneTime = moment(latestHabitDoneData?.habitDoneDataInfo?.at(-1)?.doneTime);
+            const lastDoneTimeString = latestHabitDoneData?.habitDoneDataInfo?.at(-1)?.doneTime;
+            let lastDoneTime;
+            if(lastDoneTimeString){
+                lastDoneTime = moment(lastDoneTimeString);
+            }
+
             const currentTime = moment();
 
             const currentSchedule = schedule.find((schedule: { startTime: string; endTime: string }) => {
@@ -99,21 +104,24 @@ const HabitSummary = (props: HabitSummaryProps) => {
 
             const tasksLeft = done !== habit.timesPerDay;
             const inCurrentSchedule = !!currentSchedule;
-            const thisTaskNotDoneYet = !latestHabitDoneData.habitDoneDataInfo
-            const noTasksDoneYet = !latestHabitDoneData;
 
             if (!inCurrentSchedule) {
                 setLoading(false);
                 return;
             }
 
-            if (tasksLeft && (noTasksDoneYet || thisTaskNotDoneYet)) {
+            if(!tasksLeft){
+                setLoading(false);
+                return;
+            }
+
+            if ((!lastDoneTime)) {
                 setIsButtonClickable(true);
                 setLoading(false);
                 return;
             }
 
-            const lastDoneHourMinutes = moment(lastDoneTime.format('HH:mm'), "hoursToMinutes");
+            const lastDoneHourMinutes = moment(lastDoneTime.format('HH:mm'), "hoursToMinutes").add(2, "hours");
             const currentStartTime = moment(currentSchedule.startTime, "hoursToMinutes");
 
             setIsButtonClickable(

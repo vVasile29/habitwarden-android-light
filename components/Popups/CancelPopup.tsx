@@ -22,16 +22,6 @@ export default function CancelPopup(props: CancelPopupProps) {
             </Text>
             <View style={{display: "flex", flexDirection: "row", justifyContent: "center", gap: 10}}>
                 <Pressable
-                    style={[styles.pressable, {backgroundColor: 'blue'}]}
-                    disabled={disableButton}
-                    onPress={() => {
-                        setDisableButton(true);
-                        props.handlePressNotDone();
-                    }}
-                >
-                    <Text style={{fontSize: 20, fontWeight: "bold"}}>Abbrechen</Text>
-                </Pressable>
-                <Pressable
                     style={styles.pressable}
                     onPress={() => {
                         props.setCancelPopupVisible(false);
@@ -41,6 +31,16 @@ export default function CancelPopup(props: CancelPopupProps) {
                     }}
                 >
                     <Text style={{fontSize: 20, fontWeight: "bold"}}>Weiter</Text>
+                </Pressable>
+                <Pressable
+                    style={[styles.pressable, {backgroundColor: 'blue'}]}
+                    disabled={disableButton}
+                    onPress={() => {
+                        setDisableButton(true);
+                        props.handlePressNotDone();
+                    }}
+                >
+                    <Text style={{fontSize: 20, fontWeight: "bold"}}>Abbrechen</Text>
                 </Pressable>
             </View>
         </ModalPopup>
