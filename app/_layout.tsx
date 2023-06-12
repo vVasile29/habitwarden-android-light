@@ -51,6 +51,7 @@ function RootLayoutNav() {
                         <Stack.Screen name="(habits)/water" options={{headerShown: false}}/>
                         <Stack.Screen name="(habits)/squats" options={{headerShown: false}}/>
                         <Stack.Screen name="(habits)/meditation" options={{headerShown: false}}/>
+                        <Stack.Screen name="modal" options={{headerShown: true, headerTitle: "Information"}}/>
                     </Stack>
                 </ThemeProvider>
             </AuthProvider>

@@ -132,7 +132,7 @@ const HabitSummary = (props: HabitSummaryProps) => {
         return (
             <View
                 style={styles.summary}>
-                <Text style={styles.rate}>-</Text>
+                <Text style={styles.rate}></Text>
                 <View style={styles.habitButton}>
                     <CircularProgressSkeleton
                         logo={logo}

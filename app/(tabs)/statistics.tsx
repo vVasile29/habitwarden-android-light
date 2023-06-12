@@ -73,8 +73,9 @@ export default function Statistics() {
     const [barChartWater, setBarChartWater] = useState(0);
     const [barChartSquats, setBarChartSquats] = useState(0);
     const [barChartMeditation, setBarChartMeditation] = useState(0);
-
-    const barChartData = [barChartWater, barChartSquats, barChartMeditation];
+    const [waterToDoAmount, setWaterToDoAmount] = useState(0);
+    const [squatsToDoAmount, setSquatsToDoAmount] = useState(0);
+    const [meditationToDoAmount, setMeditationToDoAmount] = useState(0);
 
     const getAllUserHabitDataWithDateCompleted = async (userName: string): Promise<UserHabitDataWithDate[]> => {
         const response = await axios.get(`${API}/dateData/getAllUserHabitDataWithDateCompleted/${userName}`);
@@ -85,9 +86,33 @@ export default function Statistics() {
         return response.data;
     };
 
+    const getWater = async () => {
+        const waterResponse = await axios.get<Habit>(`${API}/habits/getHabit/${WATER}`);
+        return waterResponse.data;
+    }
+
+    const getSquats = async () => {
+        const waterResponse = await axios.get<Habit>(`${API}/habits/getHabit/${SQUATS}`);
+        return waterResponse.data;
+    }
+
+    const getMeditation = async () => {
+        const waterResponse = await axios.get<Habit>(`${API}/habits/getHabit/${MEDITATION}`);
+        return waterResponse.data;
+    }
+
     useEffect(() => {
         async function getAllUserData() {
             const userName = await SecureStore.getItemAsync(USER_KEY);
+
+            const water = await getWater();
+            setWaterToDoAmount(water.timesPerDay);
+
+            const squats = await getSquats();
+            setSquatsToDoAmount(squats.timesPerDay);
+
+            const meditation = await getMeditation();
+            setMeditationToDoAmount(meditation.timesPerDay);
 
             const completed = await getAllUserHabitDataWithDateCompleted(userName!);
             setCompleted(completed);
@@ -215,14 +240,17 @@ export default function Statistics() {
                         >
                             <VictoryBar
                                 data={[
-                                    {x: "Wasser", y: barChartWater},
-                                    {x: "Kniebeugen", y: barChartSquats},
-                                    {x: "Meditation", y: barChartMeditation}
+                                    {x: "Wasser", y: barChartWater / waterToDoAmount * 10},
+                                    {x: "Kniebeugen", y: barChartSquats / squatsToDoAmount * 10},
+                                    {x: "Meditation", y: barChartMeditation / meditationToDoAmount * 10}
                                 ]}
-                                style={{data: {fill: ({datum}) => getColorByCategory(datum.x)}}}
+                                labels={[barChartWater, barChartSquats, barChartMeditation]}
+                                style={{
+                                    data: {fill: ({datum}) => getColorByCategory(datum.x)},
+                                }}
                                 categories={{
                                     x: ["Wasser", "Kniebeugen", "Meditation"],
-                                    y: ["1", "2", "3", "4", "5", "6", "7", "8"]
+                                    y: ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"]
                                 }}
                                 alignment="middle"
                                 animate={{

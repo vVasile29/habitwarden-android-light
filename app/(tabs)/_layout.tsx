@@ -1,7 +1,8 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {Link, Tabs} from 'expo-router';
 import {Pressable, useColorScheme} from 'react-native';
-
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import React from "react";
 
@@ -29,7 +30,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="habits"
                 options={{
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color}) => <AntDesign name="rightcircle" size={25} color={color}/>,
                     tabBarActiveBackgroundColor: "#fd7e14",
                     tabBarInactiveBackgroundColor: "#fd7e14",
                     headerRight: () => (
@@ -39,7 +40,7 @@ export default function TabLayout() {
                                     <FontAwesome
                                         name="info-circle"
                                         size={25}
-                                        color={Colors[colorScheme ?? 'light'].text}
+                                        color={"black"}
                                         style={{marginRight: 15, opacity: pressed ? 0.5 : 1}}
                                     />
                                 )}
@@ -51,7 +52,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="statistics"
                 options={{
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color}) => <AntDesign name="barschart" size={30} color={color}/>,
                     tabBarActiveBackgroundColor: "#fd7e14",
                     tabBarInactiveBackgroundColor: "#fd7e14",
                 }}
@@ -59,7 +60,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="profile"
                 options={{
-                    tabBarIcon: ({color}) => <TabBarIcon name="code" color={color}/>,
+                    tabBarIcon: ({color}) => <FontAwesome5 name="user-circle" size={26} color={color}/>,
                     tabBarActiveBackgroundColor: "#fd7e14",
                     tabBarInactiveBackgroundColor: "#fd7e14",
                 }}

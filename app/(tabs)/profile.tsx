@@ -95,10 +95,10 @@ export default function Profile() {
                     <Text style={styles.infoValue}>{codeword}</Text>
                 </View>
             </View>
-            {/*<View style={styles.buttonContainer}>*/}
-            {/*    <Button title={'reload notifications'} onPress={reloadNotifications}/>*/}
-            {/*    <Button title={'logout'} onPress={logout}/>*/}
-            {/*</View>*/}
+            <View style={styles.buttonContainer}>
+                <Button title={'reload notifications'} onPress={reloadNotifications}/>
+                <Button title={'logout'} onPress={logout}/>
+            </View>
         </View>
     );
 };
