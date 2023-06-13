@@ -22,6 +22,7 @@ interface HabitScreenTimerWithPopupProps {
     handleShowPointsClose: () => Promise<void>;
     cancelPopupVisible: boolean;
     setCancelPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    habitScreenButtonsDisabled: boolean;
 }
 
 export default function HabitScreenTimerWithPopups(props: HabitScreenTimerWithPopupProps) {
@@ -37,6 +38,7 @@ export default function HabitScreenTimerWithPopups(props: HabitScreenTimerWithPo
                 setWantedToQuit={props.setWantedToQuit}
                 logo={props.logo}
                 setCancelPopupVisible={props.setCancelPopupVisible}
+                habitScreenButtonsDisabled={props.habitScreenButtonsDisabled}
             />
             <LiePopup
                 liePopupVisible={props.liePopupVisible}

@@ -18,8 +18,7 @@ export default function ModalScreen() {
                     Du kannst dir auf der Statistiken-Seite anschauen, wie oft du deine Habits pro Tag ausgeführt hast.
                 </Text>
                 <Text style={styles.infoText}>
-                    Pro Habit sammelst du Punkte, die die jedoch auch wieder verlieren kannst, falls du sie abbrichst.
-                    Deinen Punktestand kannst du dir in der Profil-Seite anschauen.
+                    Pro Habit sammelst du Punkte, deinen Punktestand kannst du dir in der Profil-Seite anschauen.
                 </Text>
             </View>
             <Text style={styles.haveFunText}>Viel Spaß!</Text>

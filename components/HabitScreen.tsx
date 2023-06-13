@@ -10,6 +10,7 @@ interface HabitScreenProps {
     setWantedToQuit: React.Dispatch<React.SetStateAction<boolean>>;
     logo: any;
     setCancelPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    habitScreenButtonsDisabled: boolean;
 }
 
 export default function HabitScreen(props: HabitScreenProps) {
@@ -36,6 +37,7 @@ export default function HabitScreen(props: HabitScreenProps) {
                         borderWidth: 3,
                         borderRadius: 15,
                     }}
+                    disabled={props.habitScreenButtonsDisabled}
                     onPress={() => {
                         props.setWantedToQuit(true);
                         props.setCancelPopupVisible(true);
@@ -54,6 +56,7 @@ export default function HabitScreen(props: HabitScreenProps) {
                         borderWidth: 3,
                         borderRadius: 15,
                     }}
+                    disabled={props.habitScreenButtonsDisabled}
                     onPress={() => {
                         props.setLiePopupVisible(true);
                         props.handlePressDone();

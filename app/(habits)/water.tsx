@@ -15,6 +15,7 @@ export default function Water() {
     const [lieOnDone, setLieOnDone] = useState(false);
     const [wantedToQuit, setWantedToQuit] = useState(false);
     const [cancelPopupVisible, setCancelPopupVisible] = useState(false);
+    const [habitScreenButtonsDisabled, setHabitScreenButtonsDisabled] = useState(false);
     const router = useRouter();
 
     const habitPromise = useFetchPointsPerTask(WATER);
@@ -26,12 +27,14 @@ export default function Water() {
     }
 
     async function handlePressYesOnDone() {
+        setHabitScreenButtonsDisabled(true);
         setLiePopupVisible(false)
         await saveData(habit?.name!, true, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
         setShowPointsPopupVisible(true);
     }
 
     async function handlePressNotDone() {
+        setHabitScreenButtonsDisabled(true);
         await saveData(WATER, false, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
         router.replace("/habits");
     }
@@ -58,6 +61,7 @@ export default function Water() {
                 handleShowPointsClose={handleShowPointsClose}
                 cancelPopupVisible={cancelPopupVisible}
                 setCancelPopupVisible={setCancelPopupVisible}
+                habitScreenButtonsDisabled={habitScreenButtonsDisabled}
             />
         </View>
     );

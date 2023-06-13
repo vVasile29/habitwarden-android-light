@@ -19,6 +19,7 @@ interface HabitScreenWithPopupProps {
     handleShowPointsClose: () => Promise<void>;
     cancelPopupVisible: boolean;
     setCancelPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    habitScreenButtonsDisabled: boolean;
 }
 
 export default function HabitScreenWithPopups(props: HabitScreenWithPopupProps) {
@@ -31,6 +32,7 @@ export default function HabitScreenWithPopups(props: HabitScreenWithPopupProps) 
                 setWantedToQuit={props.setWantedToQuit}
                 logo={props.logo}
                 setCancelPopupVisible={props.setCancelPopupVisible}
+                habitScreenButtonsDisabled={props.habitScreenButtonsDisabled}
             />
             <LiePopup
                 liePopupVisible={props.liePopupVisible}

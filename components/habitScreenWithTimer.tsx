@@ -13,6 +13,7 @@ interface HabitScreenWithTimerProps {
     setWantedToQuit: React.Dispatch<React.SetStateAction<boolean>>;
     logo: any;
     setCancelPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    habitScreenButtonsDisabled: boolean;
 }
 
 export default function HabitScreenWithTimer(props: HabitScreenWithTimerProps) {
@@ -54,6 +55,7 @@ export default function HabitScreenWithTimer(props: HabitScreenWithTimerProps) {
                         borderWidth: 3,
                         borderRadius: 15,
                     }}
+                    disabled={props.habitScreenButtonsDisabled}
                     onPress={() => {
                         props.setIsPlaying(false);
                         props.setWantedToQuit(true);
@@ -71,6 +73,7 @@ export default function HabitScreenWithTimer(props: HabitScreenWithTimerProps) {
                         borderWidth: 3,
                         borderRadius: 15,
                     }}
+                    disabled={props.habitScreenButtonsDisabled}
                     onPress={() => {
                         props.setIsPlaying(false);
                         props.setLiePopupVisible(true);

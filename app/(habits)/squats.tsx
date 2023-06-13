@@ -10,15 +10,13 @@ import {View} from "../../components/Themed";
 
 export default function Squats() {
     const [liePopupVisible, setLiePopupVisible] = useState(false);
-    const [losePointsWarningPopupVisible, setLosePointsWarningPopupVisible] = useState(false);
-    const [shameCheckbox, setShameCheckbox] = useState(false);
-    const [losePointsPopupVisible, setLosePointsPopupVisible] = useState(false);
     const [showPointsPopupVisible, setShowPointsPopupVisible] = useState(false);
     const [isPlaying, setIsPlaying] = useState(true)
     const [habit, setHabit] = useState<Habit>();
     const [lieOnDone, setLieOnDone] = useState(false);
     const [wantedToQuit, setWantedToQuit] = useState(false);
     const [cancelPopupVisible, setCancelPopupVisible] = useState(false);
+    const [habitScreenButtonsDisabled, setHabitScreenButtonsDisabled] = useState(false);
     const router = useRouter();
 
     const habitPromise = useFetchPointsPerTask(SQUATS);
@@ -31,12 +29,14 @@ export default function Squats() {
     }
 
     async function handlePressYesOnDone() {
+        setHabitScreenButtonsDisabled(true);
         setLiePopupVisible(false)
         await saveData(habit?.name!, true, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
         setShowPointsPopupVisible(true);
     }
 
     async function handlePressNotDone() {
+        setHabitScreenButtonsDisabled(true);
         await saveData(SQUATS, false, lieOnDone, wantedToQuit, habit?.pointsPerTask!);
         router.replace("/habits");
     }
@@ -63,6 +63,7 @@ export default function Squats() {
                 handleShowPointsClose={handleShowPointsClose}
                 cancelPopupVisible={cancelPopupVisible}
                 setCancelPopupVisible={setCancelPopupVisible}
+                habitScreenButtonsDisabled={habitScreenButtonsDisabled}
             />
         </View>
     );
