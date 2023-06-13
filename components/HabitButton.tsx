@@ -54,7 +54,7 @@ export default function HabitButton(props: HabitButtonProps) {
             {logo}
             <Text style={{
                 position: "absolute",
-                top: heightDP("17%"),
+                top: heightDP("16%"),
                 fontSize: heightDP("3.5%"),
                 fontWeight: "bold"
             }}>{doneAmount + "/" + toDoAmount}</Text>

@@ -1,6 +1,6 @@
 import {heightDP} from "../constants/DpScaling";
 
-export const CIRCLE_RADIUS: number = heightDP("12%");
+export const CIRCLE_RADIUS: number = heightDP("11%");
 // export const CIRCLE_RADIUS: number = 95;
 export const STROKE_WIDTH: number = heightDP("2%");
 // export const STROKE_WIDTH: number = 15;

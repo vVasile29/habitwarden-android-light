@@ -25,7 +25,7 @@ export default function CircularProgressSkeleton(props: CircularProgressSkeleton
             {logo}
             <Text style={{
                 position: "absolute",
-                top: heightDP("17%"),
+                top: heightDP("16%"),
                 fontSize: heightDP("3.5%"),
                 fontWeight: "bold"
             }}>{" / "}</Text>
