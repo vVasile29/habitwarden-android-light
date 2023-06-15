@@ -71,7 +71,7 @@ export function useSaveData() {
 
             if (done) {
                 await axios.post(`${API}/user/savePoints/${pointsPerTask}`)
-            };
+            }
         } catch (e) {
             console.log(e);
         }
@@ -82,10 +82,10 @@ export default function Habits() {
     const [waterLoading, setWaterLoading] = useState(true);
     const [squatsLoading, setSquatsLoading] = useState(true);
     const [meditationLoading, setMeditationLoading] = useState(true);
+    const [reload, setReload] = useState(false);
     const allSiblingsLoaded = !waterLoading && !squatsLoading && !meditationLoading;
     const [componentKey, setComponentKey] = useState(moment().format())
     const [canPressReload, setCanPressReload] = useState(true);
-    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         setComponentKey(moment().format())
@@ -103,11 +103,23 @@ export default function Habits() {
 
     return (
         <View key={componentKey} style={styles.container}>
-            <Pressable
-                onPress={handleReload}
-            >
-                <Ionicons name="reload-circle-sharp" size={heightDP("6%")} color="black"/>
-            </Pressable>            <Text style={styles.textRight}>Deine{"\n"}Streak</Text>
+            <View style={{width: "100%", display: "flex", flexDirection: "row"}}>
+                <Text style={[styles.textStyle, styles.textLeft]}></Text>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <Pressable
+                        onPress={handleReload}
+                    >
+                        <Ionicons
+                            name={canPressReload ? "reload-circle-sharp" : "reload-circle-outline"}
+                            size={heightDP("6%")}
+                            color="black"
+                        />
+                    </Pressable>
+                </View>
+                <View style={{flex: 1, alignItems: "flex-end"}}>
+                    <Text style={[styles.textStyle, styles.textRight]}>Deine{"\n"}Streak</Text>
+                </View>
+            </View>
             <HabitSummary
                 habitName={WATER}
                 logo={<WaterLogo position={"absolute"} top={heightDP("4.3%")} width={heightDP("12%")}
@@ -141,18 +153,17 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
     },
     textStyle: {
-        position: "absolute",
-        top: heightDP("1.5%"),
+        flex: 1,
         fontSize: heightDP("2.65%"),
         fontWeight: "bold"
     },
     textLeft: {
-        left: 18,
+        left: 14
     },
     textRight: {
-        right: 18,
+        right: 14
     },
 });

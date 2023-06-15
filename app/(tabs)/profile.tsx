@@ -50,10 +50,6 @@ export default function Profile() {
         getUserName();
     })
 
-    const logout = async () => {
-        await onLogout!();
-    }
-
     async function reloadNotifications() {
         await cancelAllNotificationsAndRemoveFirstLogin();
         await registerForPushNotificationsAsync();
@@ -63,8 +59,37 @@ export default function Profile() {
 
     if (loading) {
         return (
-            <Button title={'logout'} onPress={logout}/>
-        )
+            <View style={styles.container}>
+                <Text style={styles.title}>Hallo, {userName}!</Text>
+                <View>
+                    <Text style={styles.points}>Punktzahl: {points}</Text>
+                    <Text style={styles.shameText}>Weiter so, du bist auf einem guten Weg!</Text>
+                </View>
+                <View style={styles.infoContainer}>
+                    <View style={styles.infoText}>
+                        <Text style={styles.infoLabel}>Alter</Text>
+                        <Text style={styles.infoValue}>{age}</Text>
+                    </View>
+                    <View style={styles.separator}/>
+                    <View style={styles.infoText}>
+                        <Text style={styles.infoLabel}>Geschlecht</Text>
+                        <Text style={styles.infoValue}>{gender}</Text>
+                    </View>
+                    <View style={styles.separator}/>
+                    <View style={styles.infoText}>
+                        <Text style={styles.infoLabel}>Beruf</Text>
+                        <Text style={styles.infoValue}>{profession}</Text>
+                    </View>
+                    <View style={styles.separator}/>
+                    <View style={styles.infoText}>
+                        <Text style={styles.infoLabel}>Codeword</Text>
+                        <Text style={styles.infoValue}>{codeword}</Text>
+                    </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <Button title={'reload notifications'} onPress={reloadNotifications}/>
+                </View>
+            </View>        );
     }
 
     return (
@@ -97,7 +122,6 @@ export default function Profile() {
             </View>
             <View style={styles.buttonContainer}>
                 <Button title={'reload notifications'} onPress={reloadNotifications}/>
-                <Button title={'logout'} onPress={logout}/>
             </View>
         </View>
     );

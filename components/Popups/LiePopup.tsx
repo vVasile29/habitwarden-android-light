@@ -16,7 +16,7 @@ export default function LiePopup(props: LiePopupProps) {
     return (
         <ModalPopup visible={props.liePopupVisible}>
             <Text style={{fontSize: 25, textAlign: 'center', fontWeight: "bold"}}>
-                Hand aufs Herz, ehrlich abgeschlossen? {"\n"} ... oder nur so getan?
+                Hand aufs Herz, ehrlich abgeschlossen?
             </Text>
             <Text style={{fontSize: 100, textAlign: "center", marginBottom: 15}}>🤔</Text>
             <View style={{display: "flex", flexDirection: "row", justifyContent: "center", gap: 10}}>

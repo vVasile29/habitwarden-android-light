@@ -47,7 +47,6 @@ const HabitSummary = (props: HabitSummaryProps) => {
 
     const [doneAmount, setDoneAmountAmount] = useState(0);
     const [toDoAmount, setToDoAmount] = useState(0);
-    const [fakeUserCancellationRate, setFakeUserCancellationRate] = useState(0);
     const [streak, setStreak] = useState(0);
     const [isButtonClickable, setIsButtonClickable] = useState(false);
 
@@ -77,7 +76,6 @@ const HabitSummary = (props: HabitSummaryProps) => {
 
             const habit = habitResponse.data;
             setToDoAmount(habit.timesPerDay);
-            setFakeUserCancellationRate(habit.fakeUserCancellationRate);
 
             const habitDoneData = habitDoneDataResponse.data;
             const done = habitDoneData?.habitDoneDataInfo?.filter(
@@ -156,20 +154,17 @@ const HabitSummary = (props: HabitSummaryProps) => {
     return (
         <View style={styles.summary}>
             <View style={styles.rate}></View>
-            {/*<Text style={styles.rate}>{fakeUserCancellationRate * 100}%</Text>*/}
             <View style={styles.habitButton}>
                 <HabitButton
                     habitName={props.habitName}
                     doneAmount={doneAmount}
                     toDoAmount={toDoAmount}
                     isActive={isButtonClickable}
-                    // isActive={true} // das nur zum testen weil out of schedule nach mitternacht
                     logo={logo}
                     setIsButtonClickable={setIsButtonClickable}
                 />
             </View>
             <View style={styles.streak}>
-                {/*{streak !== 0 && <Text style={styles.streakFlame}>🔥</Text>}*/}
                 <Text style={styles.streakText}>{streak}</Text>
             </View>
         </View>

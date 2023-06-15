@@ -48,24 +48,6 @@ export default function HabitScreenWithTimer(props: HabitScreenWithTimerProps) {
                 <Pressable
                     style={{
                         alignItems: 'center',
-                        backgroundColor: 'blue',
-                        padding: heightDP("1%"),
-                        width: widthDP("35%"),
-                        borderColor: "black",
-                        borderWidth: 3,
-                        borderRadius: 15,
-                    }}
-                    disabled={props.habitScreenButtonsDisabled}
-                    onPress={() => {
-                        props.setIsPlaying(false);
-                        props.setWantedToQuit(true);
-                        props.setCancelPopupVisible(true);
-                    }}>
-                    <Text style={{fontSize: heightDP("2.5%"), fontWeight: "bold"}}>Abbrechen</Text>
-                </Pressable>
-                <Pressable
-                    style={{
-                        alignItems: 'center',
                         backgroundColor: '#82c91e',
                         padding: heightDP("1%"),
                         width: widthDP("35%"),
@@ -80,6 +62,24 @@ export default function HabitScreenWithTimer(props: HabitScreenWithTimerProps) {
                     }}
                 >
                     <Text style={{fontSize: heightDP("2.5%"), fontWeight: "bold"}}>Fertig</Text>
+                </Pressable>
+                <Pressable
+                    style={{
+                        alignItems: 'center',
+                        backgroundColor: 'blue',
+                        padding: heightDP("1%"),
+                        width: widthDP("35%"),
+                        borderColor: "black",
+                        borderWidth: 3,
+                        borderRadius: 15,
+                    }}
+                    disabled={props.habitScreenButtonsDisabled}
+                    onPress={() => {
+                        props.setIsPlaying(false);
+                        props.setWantedToQuit(true);
+                        props.setCancelPopupVisible(true);
+                    }}>
+                    <Text style={{fontSize: heightDP("2.5%"), fontWeight: "bold"}}>Abbrechen</Text>
                 </Pressable>
             </View>
         </View>

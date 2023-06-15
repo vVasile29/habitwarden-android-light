@@ -202,7 +202,41 @@ export default function Statistics() {
 
     if (loading) {
         return (
-            <View style={styles.container}></View>
+            <View style={styles.container}>
+                <View style={styles.flexContainer}>
+                    <View></View>
+                    <View style={{position: "absolute", zIndex: 1}}>
+                        <Calendar
+                            style={{
+                                width: widthDP("100%"),
+                            }}
+                        />
+                    </View>
+                    <View>
+                        <VictoryChart
+                            theme={VictoryTheme.material}
+                            domainPadding={20}
+                            width={widthDP("100%")}
+                            height={heightDP("37%")}
+                        >
+                            <VictoryBar
+                                key={moment().format()}
+                                data={[
+                                    {x: "Wasser", y: 0},
+                                    {x: "Kniebeugen", y: 0},
+                                    {x: "Meditation", y: 0}
+                                ]}
+                                labels={[barChartWater, barChartSquats, barChartMeditation]}
+                                categories={{
+                                    x: ["Wasser", "Kniebeugen", "Meditation"],
+                                    y: ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"]
+                                }}
+                                alignment="middle"
+                            />
+                        </VictoryChart>
+                    </View>
+                </View>
+            </View>
         );
     } else {
         return (
