@@ -54,8 +54,8 @@ const triggerWaterNotifications = async () => {
 }
 
 const triggerSquatsNotifications = async () => {
-    const hours = [9, 12, 14, 17, 20]
-    const minutes = [30, 0, 45, 15, 0]
+    const hours = [9, 12, 16, 19, 21]
+    const minutes = [0, 30, 0, 30, 0]
 
     for (let i = 0; i < hours.length; i++) {
         await Notifications.scheduleNotificationAsync({
@@ -75,8 +75,8 @@ const triggerSquatsNotifications = async () => {
 }
 
 const triggerMeditationNotifications = async () => {
-    const hours = [10, 12, 15, 18, 20]
-    const minutes = [0, 45, 15, 0, 30]
+    const hours = [9, 12, 16, 19, 21]
+    const minutes = [0, 30, 0, 30, 0]
 
     for (let i = 0; i < hours.length; i++) {
         await Notifications.scheduleNotificationAsync({

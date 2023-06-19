@@ -30,19 +30,19 @@ const waterSchedule = [
 ];
 
 const squatsSchedule = [
-    {startTime: '9:30', endTime: '12:00'},
-    {startTime: '12:00', endTime: '14:45'},
-    {startTime: '14:45', endTime: '17:15'},
-    {startTime: '17:15', endTime: '20:00'},
-    {startTime: '20:00', endTime: '23:59'},
+    {startTime: '9:00', endTime: '10:45'},
+    {startTime: '12:30', endTime: '14:15'},
+    {startTime: '16:00', endTime: '17:45'},
+    {startTime: '19:30', endTime: '21:00'},
+    {startTime: '21:00', endTime: '23:59'},
 ];
 
 const meditationSchedule = [
-    {startTime: '10:00', endTime: '12:45'},
-    {startTime: '12:45', endTime: '15:15'},
-    {startTime: '15:15', endTime: '18:00'},
-    {startTime: '18:00', endTime: '20:30'},
-    {startTime: '20:30', endTime: '23:59'},
+    {startTime: '9:00', endTime: '10:45'},
+    {startTime: '12:30', endTime: '14:15'},
+    {startTime: '16:00', endTime: '17:45'},
+    {startTime: '19:30', endTime: '21:00'},
+    {startTime: '21:00', endTime: '23:59'},
 ];
 
 export async function useFetchPointsPerTask(habitName: string) {
