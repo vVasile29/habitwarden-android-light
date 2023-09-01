@@ -48,7 +48,7 @@ export default function HabitScreen(props: HabitScreenProps) {
                 <Pressable
                     style={{
                         alignItems: 'center',
-                        backgroundColor: 'blue',
+                        backgroundColor: '#24a0ed',
                         padding: heightDP("1%"),
                         width: widthDP("35%"),
                         borderColor: "black",

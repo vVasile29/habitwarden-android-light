@@ -33,7 +33,7 @@ export default function CancelPopup(props: CancelPopupProps) {
                     <Text style={{fontSize: 20, fontWeight: "bold"}}>Weiter</Text>
                 </Pressable>
                 <Pressable
-                    style={[styles.pressable, {backgroundColor: 'blue'}]}
+                    style={[styles.pressable, {backgroundColor: '#24a0ed'}]}
                     disabled={disableButton}
                     onPress={() => {
                         setDisableButton(true);

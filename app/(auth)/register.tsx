@@ -100,7 +100,7 @@ const RegisterForm = () => {
                 disabled={!name || !password || !age || !gender || !profession || !codeword}
                 onPress={register}
             />
-            <Text onPress={() => router.replace("/login")}>{"\n"}Bereits registriert? Hier gehts zum Login!</Text>
+            <Text style={{textDecorationLine: "underline"}} onPress={() => router.replace("/login")}>{"\n"}Bereits registriert? Hier gehts zum Login!</Text>
         </View>
     );
 };

@@ -48,7 +48,7 @@ export default function Profile() {
 
     useEffect(() => {
         getUserName();
-    })
+    }, [])
 
     async function reloadNotifications() {
         await cancelAllNotificationsAndRemoveFirstLogin();

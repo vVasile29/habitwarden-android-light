@@ -30,17 +30,17 @@ const waterSchedule = [
 ];
 
 const squatsSchedule = [
-    {startTime: '9:00', endTime: '10:45'},
-    {startTime: '12:30', endTime: '14:15'},
-    {startTime: '16:00', endTime: '17:45'},
+    {startTime: '9:00', endTime: '12:30'},
+    {startTime: '12:30', endTime: '16:00'},
+    {startTime: '16:00', endTime: '19:30'},
     {startTime: '19:30', endTime: '21:00'},
     {startTime: '21:00', endTime: '23:59'},
 ];
 
 const meditationSchedule = [
-    {startTime: '9:00', endTime: '10:45'},
-    {startTime: '12:30', endTime: '14:15'},
-    {startTime: '16:00', endTime: '17:45'},
+    {startTime: '9:00', endTime: '12:30'},
+    {startTime: '12:30', endTime: '16:00'},
+    {startTime: '16:00', endTime: '19:30'},
     {startTime: '19:30', endTime: '21:00'},
     {startTime: '21:00', endTime: '23:59'},
 ];

@@ -45,7 +45,7 @@ const LoginForm = () => {
                 disabled={!name || !password}
                 onPress={login}
             />
-            <Text onPress={() => router.replace("/register")}>{"\n"}Not registered yet?</Text>
+            <Text style={{textDecorationLine: "underline"}} onPress={() => router.replace("/register")}>{"\n"}Noch nicht registriert? Klicke hier!</Text>
         </View>
     );
 };
